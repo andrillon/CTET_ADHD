@@ -2,18 +2,13 @@
 clear all
 close all
 
-path_fieldtrip='/Users/tand0009/Work/local/fieldtrip/';
+run ../localdef_ADHD_CTET.m
 addpath(path_fieldtrip);
 ft_defaults;
-
-path_LSCPtools='/Users/tand0009/WorkGit/LSCPtools/';
 addpath(genpath(path_LSCPtools));
-
-path_RainCloudPlot='/Users/tand0009/WorkGit/projects/ext/RainCloudPlots/';
 addpath(genpath(path_RainCloudPlot));
 
 
-data_path='/Volumes/ANDRILLON_HD1/ADHD_CTET/';
 % data_path='/Volumes/shared/R-MNHS-SPP/Bellgrove-data/Jess Barnes EEG Backup Data/EEG_CTET/';
 files=dir([data_path filesep '*' filesep '*' filesep '*_CTET.bdf']);
 
@@ -151,7 +146,7 @@ mdl2=fitlme(table2,'FA~1+Group+(1|SubID)');
 mdl3=fitlme(table2,'Miss~1+Group+(1|SubID)');
 mdl4=fitlme(table2,'stdRT~1+Group+(1|SubID)');
 
-writetable(table2,'/Users/tand0009/Data/ADHD_CTET/Behav/CTET_ADHD_behav_resblock.txt');
+writetable(table2,[save_path 'Behav' filesep 'CTET_ADHD_behav_resblock.txt']);
 
 %%
 Colors=[253,174,97;
