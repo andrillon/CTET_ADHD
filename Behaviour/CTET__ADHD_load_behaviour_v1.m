@@ -9,7 +9,7 @@ addpath(genpath(path_LSCPtools));
 addpath(genpath(path_RainCloudPlot));
 
 %%
-table=readtable([save_path 'Behav' filesep 'CTET_ADHD_behav_resblock.txt']);
+table=readtable([save_path filesep 'CTET_ADHD_behav_resblock.txt']);
 table.SubID=categorical(table.SubID);
 table.Group=categorical(table.Group);
 table.Group=reordercats(table.Group,[2,1]);
