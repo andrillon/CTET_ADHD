@@ -47,11 +47,11 @@ end
 
 Hit_RT_CTR=[];
 for nc=1:length(ctrs)
-Hit_RT_CTR(nc)=nanmean(table.Hit_RT(table.SubID==ctrs(nc)));
+Hit_RT_CTR(nc)=nanmean(table.FA(table.SubID==ctrs(nc)));
 end
-Hit_RT_ADHD=[];
+FA_ADHD=[];
 for nc=1:length(adhds)
-Hit_RT_ADHD(nc)=nanmean(table.Hit_RT(table.SubID==adhds(nc)));
+FA_ADHD(nc)=nanmean(table.FA(table.SubID==adhds(nc)));
 end
 
 stdRT_CTR=[];
@@ -67,5 +67,5 @@ end
 figure;
 simpleBarPlot(1,100*Hit_RT_CTR, Colors(1,:),0.9,'k',[],3);
 simpleBarPlot(2,100*Hit_RT_ADHD, Colors(2,:),0.9,'k',[],3);
-format_fig; title('Hit RT');
+format_fig; title('stdRT');
 set(gca,'XTick',1:2,'XTickLabel',{'CTR','ADHD'});
