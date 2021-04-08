@@ -63,9 +63,61 @@ for nc=1:length(adhds)
 stdRT_ADHD(nc)=nanmean(table.stdRT(table.SubID==adhds(nc)))./nanmean(table.Hit_RT(table.SubID==adhds(nc)));
 end
 
-%%
+%%BarPlots
 figure;
-simpleBarPlot(1,100*Hit_RT_CTR, Colors(1,:),0.9,'k',[],3);
-simpleBarPlot(2,100*Hit_RT_ADHD, Colors(2,:),0.9,'k',[],3);
-format_fig; title('Hit RT');
+simpleBarPlot(1,100*Miss_CTR, Colors(1,:),0.9,'k',[],3);
+simpleBarPlot(2,100*Miss_ADHD, Colors(2,:),0.9,'k',[],3);
+format_fig; title('Miss');
 set(gca,'XTick',1:2,'XTickLabel',{'CTR','ADHD'});
+
+%%RainCloudPlots Miss
+
+figure;
+h1 = raincloud_plot(Miss_CTR, 'box_on', 1, 'color', Colors(1,:), 'alpha', 0.5,...
+     'box_dodge', 1, 'box_dodge_amount', .15, 'dot_dodge_amount', .15,...
+     'box_col_match', 0);
+h2 = raincloud_plot(Miss_ADHD, 'box_on', 1, 'color', Colors(2,:), 'alpha', 0.5,...
+     'box_dodge', 1, 'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0);
+legend([h1{1} h2{1}], {'CTR', 'ADHD'});
+title(['Miss']);
+set(gca,'XLim', [-0.7 1.7], 'YLim', [-0.6 2]);
+box off
+
+%%RainCloudPlots False Alarms
+
+figure;
+h1 = raincloud_plot(FA_CTR, 'box_on', 1, 'color', Colors(1,:), 'alpha', 0.5,...
+     'box_dodge', 1, 'box_dodge_amount', .15, 'dot_dodge_amount', .15,...
+     'box_col_match', 0);
+h2 = raincloud_plot(FA_ADHD, 'box_on', 1, 'color', Colors(2,:), 'alpha', 0.5,...
+     'box_dodge', 1, 'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0);
+legend([h1{1} h2{1}], {'CTR', 'ADHD'});
+title(['False Alarms']);
+set(gca,'XLim', [-0.02 0.07], 'YLim', [-40 80]);
+box off
+
+%%RainCloudPlots Hit_RT
+
+figure;
+h1 = raincloud_plot(Hit_RT_CTR, 'box_on', 1, 'color', Colors(1,:), 'alpha', 0.5,...
+     'box_dodge', 1, 'box_dodge_amount', .15, 'dot_dodge_amount', .15,...
+     'box_col_match', 0);
+h2 = raincloud_plot(Hit_RT_ADHD, 'box_on', 1, 'color', Colors(2,:), 'alpha', 0.5,...
+     'box_dodge', 1, 'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0);
+legend([h1{1} h2{1}], {'CTR', 'ADHD'});
+title(['Hit RT']);
+set(gca,'XLim', [0.9 2.1], 'YLim', [-2 6]);
+box off
+
+%%RainCloudPlots std_RT
+
+figure;
+h1 = raincloud_plot(stdRT_CTR, 'box_on', 1, 'color', Colors(1,:), 'alpha', 0.5,...
+     'box_dodge', 1, 'box_dodge_amount', .15, 'dot_dodge_amount', .15,...
+     'box_col_match', 0);
+h2 = raincloud_plot(stdRT_ADHD, 'box_on', 1, 'color', Colors(2,:), 'alpha', 0.5,...
+     'box_dodge', 1, 'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0);
+legend([h1{1} h2{1}], {'CTR', 'ADHD'});
+title(['stdRT']);
+set(gca,'XLim', [-0.1 0.4], 'YLim', [-4 10]);
+box off
