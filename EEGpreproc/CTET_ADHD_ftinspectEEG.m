@@ -31,7 +31,7 @@ data               = ft_preprocessing(cfg); % read raw data
 cfg          = [];
 cfg.method   = 'summary';
 cfg.alim     = 5e-5;
-data        = ft_rejectvisual(cfg,data);
+data2        = ft_rejectvisual(cfg,data);
 
 %% display data
 cfg=[];
