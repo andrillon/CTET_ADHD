@@ -121,3 +121,18 @@ legend([h1{1} h2{1}], {'CTR', 'ADHD'});
 title(['stdRT']);
 set(gca,'XLim', [-0.1 0.4], 'YLim', [-4 10]);
 box off
+
+%% Repeated Measures plot
+data_to_plot=[];
+group_labels={'CTR','ADHD'};
+for i = 1:8 % number of repetitions
+    for j = 1:2 % number of group
+        data_to_plot{i, j} = table.Hit(table.BlockN==i & table.Group==group_labels{j});
+    end
+end
+
+figure; hold on;
+h   = rm_raincloud(data_to_plot, Colors(1:2,:));
+% set(gca, 'YLim', [-0.3 1.6]);
+title(['Hit per block']);
+format_fig;
