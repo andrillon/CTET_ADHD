@@ -56,6 +56,12 @@ for nF=1:length(files)
     %%% find blocks
     all_idx=[my_events.sample];
     all_val=[my_events.value];
+    if isempty(all_idx)
+%         pause;
+        nc=nc+1;
+       problematic_files{nc}= File_Name;
+       continue;
+    end
     blocks_boundaries=all_idx(find(diff(all_idx/hdr.Fs)>1.7)+1);
         blocks_boundaries=[all_idx(1) blocks_boundaries];
     fprintf('... %g block transitions found\n',length(blocks_boundaries));
