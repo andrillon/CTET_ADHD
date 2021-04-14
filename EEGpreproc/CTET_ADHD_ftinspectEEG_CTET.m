@@ -4,29 +4,12 @@ addpath((path_fieldtrip));
 ft_defaults;
 
 %% choose and load subject
-List_Subj=dir([data_path filesep '*' filesep '*' filesep '*CTET*.bdf']);
+List_Subj=dir([data_path filesep 'Preproc' filesep 'fe_ft_*.mat']);
 ListNames={List_Subj.name};
 pick=listdlg('ListString',ListNames);
 fprintf('... working on %s\n',ListNames{pick})
-
-%% basic preprocessing
-hdr=ft_read_header([List_Subj(pick).folder filesep List_Subj(pick).name]);
-cfg=[];
-cfg.channel        = hdr.label(match_str(hdr.chantype,'eeg'));
-cfg.dataset        = [List_Subj(pick).folder filesep List_Subj(pick).name];
-cfg.demean         = 'yes';
-cfg.lpfilter       = 'yes';        % enable high-pass filtering
-cfg.lpfilttype     = 'but';
-cfg.lpfiltord      = 5;
-cfg.lpfreq         = 40;
-cfg.hpfilter       = 'yes';         % enable high-pass filtering
-cfg.hpfilttype     = 'but';
-cfg.hpfiltord      = 5;
-cfg.hpfreq         = 0.1;
-cfg.dftfilter      = 'yes';        % enable notch filtering to eliminate power line noise
-cfg.dftfreq        = [50]; % set up the frequencies for notch filtering
-data               = ft_preprocessing(cfg); % read raw data
-
+load([data_path filesep 'Preproc' filesep ListNames{pick}])
+ 
 %% reject trials
 cfg          = [];
 cfg.method   = 'summary';
