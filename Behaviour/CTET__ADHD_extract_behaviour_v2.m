@@ -10,7 +10,7 @@ addpath(genpath(path_RainCloudPlot));
 
 
 % data_path='/Volumes/shared/R-MNHS-SPP/Bellgrove-data/Jess Barnes EEG Backup Data/EEG_CTET/';
-files=dir([data_path filesep '*' filesep '*' filesep '*_CTET.bdf']);
+files=dir([data_path filesep '*' filesep '*' filesep '*_CTET*.bdf']);
 
 wrong_events={'MC_control_CTET.bdf'};
 %%
