@@ -17,7 +17,7 @@ for nF=1:length(files)
     seps=findstr(SubID,'_');
     SubID=SubID(1:seps(1)-1);
     tic;
-    fprintf('... working on %s\n',file_name)
+    fprintf('... working on %s (%g/%g)\n',file_name,nF,length(files))
     
     % load behavioural results
     if exist([save_path filesep 'CTET_ADHD_behav_' file_name(1:end-4) '.txt'])==0
