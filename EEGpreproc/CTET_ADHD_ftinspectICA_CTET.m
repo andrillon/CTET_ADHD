@@ -6,12 +6,11 @@ addpath((path_fieldtrip));
 ft_defaults;
 
 %% choose and load subject
-List_Subj=dir([data_path filesep 'Preproc' filesep 'Icf_ft_*EO*.mat']);
+List_Subj=dir([data_path filesep 'Preproc' filesep 'Icfe_ft_*CTET*.mat']);
 ListNames={List_Subj.name};
 pick=listdlg('ListString',ListNames);
 load([data_path filesep 'Preproc' filesep ListNames{pick}])
 oridata=data;
-
 
 %% Layout
 cfg = [];
@@ -48,9 +47,8 @@ cfg          = [];
 cfg.channel  = pickComponents; % components to be plotted
 cfg.viewmode = 'component';
 cfg.layout   = layout; % specify the layout file that should be used for plotting
-% cfg.allowoverlap='true';
-cfg.continuous='yes';
-cfg.blocksize=20;
+cfg.allowoverlap='true';
+cfg.continuous='no';
 ft_databrowser(cfg, comp);
 fprintf('... working on %s\n',ListNames{pick})
 
