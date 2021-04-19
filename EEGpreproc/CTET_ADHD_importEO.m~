@@ -7,7 +7,7 @@ run ../localdef_ADHD_CTET.m
 addpath((path_fieldtrip));
 ft_defaults;
 
-files=dir([data_path filesep '*' filesep '*' filesep '*CTET*.bdf']);
+files=dir([data_path filesep '*' filesep '*' filesep '*EO*.bdf']);
 
 %% loop on subjects
 for nF=1:length(files)
@@ -17,11 +17,10 @@ for nF=1:length(files)
     seps=findstr(SubID,'_');
     SubID=SubID(1:seps(1)-1);
     tic;
-    fprintf('... working on %s\n',file_name)
+    fprintf('... working on %s (%g/%g)\n',file_name,nF,length(files))
     
     % load behavioural results
     if exist([save_path filesep 'CTET_ADHD_behav_' file_name(1:end-4) '.txt'])==0
-        if strcmp([save_path filesep 'CTET_ADHD_behav_' file_name(1:end-4) '.txt']
         warning(sprintf('missing behavioural file for %s\n',file_name(1:end-4)));
         continue;
     end
@@ -33,13 +32,8 @@ for nF=1:length(files)
         
         %%% Define epochs
         cfg=[];
-        cfg.trialfun            = 'CTET_ADHD_trialfun';
-        cfg.table               = table;
         cfg.SubID               = SubID;
         cfg.dataset             = [folder_name filesep file_name];
-        cfg.trialdef.prestim    = 0.5;
-        cfg.trialdef.poststim   = 1.8;
-        cfg = ft_definetrial(cfg);
         
         cfg.channel        = hdr.label(match_str(hdr.chantype,'eeg'));
         cfg.demean         = 'yes';

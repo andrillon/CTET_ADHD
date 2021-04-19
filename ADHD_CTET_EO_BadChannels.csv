@@ -1,0 +1,88 @@
+FileName,Bad_Channels,Comments
+AWMc_EO_Before,'AF8',TP7 (bad for only a short period of time)
+AWMc_EO_After,[],Nothing aberrant
+DC_EO_Before,[],"Fp1, AF7, AF3, F5, F7, Fpz, Fp2, AF8, AFz, F4, F6 (Electrodes affected by ocular artefacts)"
+DF_EO_Before,[],"Fp1, AF7, AF3, F7, Fpz, Fp2, AF8, AF4, AFz, Fz, F2, F8 (High amplitude artefact on cluster of electrodes, maybe reject this portion of data)."
+DF_EO_After,[],"Fp1, AF7, AF3, F1, F7, FT7, Iz, Fpz, Fp2, AF8, AF4, AFz, F8, FT8 (High amplitude artefact on cluster of electrodes, maybe reject this portion of data)."
+DM_EO_Before,[],Nothing aberrant
+DM_EO_After,[],"FT8, Fp1, AF7, AF3, F3, F5, F7, FT7, Fpz, Fp2, AF8, AF4, AFz, F6, F8 (Electrodes affected by ocular artefacts)"
+ET_EO_Before,[],"Fp1, AF7, F7, FT7, FC5, TP7, P7, P9, PO7, Fpz, Fp2, AF8, F6, F8, FT8, FC6, C6, P8, P10, PO8 (Electrodes affected by physiological artefacts)"
+ET_EO_After,[],Nothing aberrant
+FA_EO,[],"Fp1, C5, Fpz, Fp2, AF8, AF4  (Electrodes affected by ocular artefacts)"
+FA_EO_after,'FC5',"FT8, T8, P10  (Electrodes affected by physiological artefacts, mainly at the end of the trial)"
+IH_EO_Before,'CP1',"Fp1, Fp2, ...  (Electrodes affected by ocular artefacts)"
+IH_EO_After,'T8',High amplitude artefact
+MD_EO_Before,'Fp2',"AF4, FT8, FC2, O2  (Electrodes affected by physiological artefacts)"
+MD_EO_After,[],"PO7, FT8, FC6, C6, T8, TP8, P8 (Electrodes affected by ocular artefacts)"
+NK_EO_Before,[],Nothing aberrant (low amplitude ocular artefects)
+NK_EO_After,[],"FT7, Iz (Electrodes affected by physiological artefacts)"
+PF_EO_before,[],"Fp1, Fpz, Fp2 (Electrodes affected by ocular artefacts)"
+PF_EO_after,[],"Fp1, Fpz, Fp2 (Electrodes affected by ocular artefacts)"
+SK_EO_before,[],"Nothing aberrant (low amplitude ocular artefacts, F5)"
+SK_EO_after,[],Nothing aberrant (low amplitude ocular artefacts)
+SL_EO_before,'P9',"Fp1, AF7, F7, FT7,Fpz, Fp2, F8, T8, P10 (Electrodes affected by ocular artefacts)"
+SL_EO_after,"'F7','FT7','P9'","(High amplitude artefact on cluster of two electrodes next to each other, maybe reject this portion of data)."
+TH_EO_Before,[],Nothing aberrant
+TH_EO_After,[],Nothing aberrant
+ED_EO_After,[],C3 (low amplitude artefacts)
+OD_EO_before,'O1',"C3, PO7 (low amplitude artefacts)"
+FB_EO_before,[],Nothing aberrant
+FS_EO_after,[],"Nothing aberrant (low amplitude ocular artefacts, C5)"
+MC_EO_Before,[],"Fp1, AF7, FT7, Fpz, Fp2, AF8 (Electrodes affected by ocular artefacts)"
+MC_EO_After,[],"FT7, AF8, F8 (Electrodes affected by ocular artefacts)"
+SK_2_EO_Before,[],Nothing aberrant (low amplitude artefacts)
+SK_2_EO_After,[],"P9, O1, Iz, Oz, PO4, O2 (bad for only a short period of time)"
+AK_EO_Before,[],Nothing aberrant (low amplitude ocular artefacts)
+AM_EO_Before,[],Nothing aberrant (low amplitude ocular artefacts)
+AM_EO_After,[],Nothing aberrant (low amplitude ocular artefacts)
+AW_EO_Before,[],"Nothing aberrant (low amplitude ocular artefacts, C1)"
+AW_EO_After,[],Nothing aberrant (low amplitude ocular artefacts)
+CF_EO_before,[],Nothing aberrant (low amplitude ocular artefacts)
+CF_EO_after,[],"Nothing aberrant (low amplitude ocular artefacts, reference artefact at the beginning of the trial)"
+CH_EO_Before,[],"Pz, PO8 (bad for only a short period of time)"
+CH_EO_After,'CP5',"C1, C5, Iz, F8, Cp6 (low amplitude artefacts)"
+DMC_EO_before,'Fp2',
+DMC_EO_after,'PO7',"Nothing aberrant (low amplitude ocular artefacts, Fp2) "
+EC_EO_before,'CP5',
+KD_EO_before,[],"Fp1, Fpz, Fp2 (Electrodes affected by ocular artefacts)"
+KD_EO_after,'FT8',"Fp1, Fpz, Fp2 (Electrodes affected by ocular artefacts)"
+LB_EO_Before,[],"Fp1, AF7, TP7, CP1, PO7, POz, Fp2, AF4, CP6, P10, O2 (Electrodes affected by high amplitude physiological artefact)"
+LB_EO_After,[],"Fp2, FC6, C6, CP6, P8, P10, PO8, O2 (Electrodes affected by high amplitude physiological artefact)"
+MB_EO_before,[],"Fp1 (Electrode affected by ocular artefacts), P9 (bad for only a short period of time) Pz (a bit noisy but ok?)"
+MB_EO_after,[],POz (Electrode affected by ocular artefacts)
+MB2_EO_before,[],Nothing aberrant (low amplitude ocular artefacts)
+MB2_EO_After,[],Nothing aberrant (low amplitude ocular artefacts) P10 (a bit noisy)
+MC_control_EO_Before,[],Nothing aberrant (low amplitude ocular artefacts)
+MC_control_EO_After,[],Nothing aberrant
+MOS_EO_Before,[],"(Electrodes affected by physiological artefacts, TP8)"
+MOS_EO_After,[],"Fp1, Fpz, Fp2 (Electrodes affected by ocular artefacts)"
+NB_EO_Before,[],Nothing aberrant (low amplitude ocular artefacts)
+NB_EO_After,[],Nothing aberrant (low amplitude ocular artefacts and Iz only bad for a short period of time)
+NOK_EO_Before,[],Nothing aberrant (low amplitude ocular artefacts)
+NOK_EO_After,'P8',and low amplitude artefacts
+SB_EO_Before,[],"Fp2, AF8 (Electrodes affected by ocular artefacts)"
+SB_EO_after,[],Fp2 (Electrode affected by ocular artefacts)
+SC_EO_before,[],Nothing aberrant (low amplitude ocular artefacts)
+SC_EO_after,[],Nothing aberrant (low amplitude ocular artefacts)
+SH_EO_before,[],"Fp1, Fpz, Fp2 (Electrodes affected by ocular artefacts)"
+SOL_EO_Before,[],Nothing aberrant (low amplitude ocular artefacts)
+SOL_EO_After,[],"Fp1, Fpz, Fp2, AF8 (Electrodes affected by ocular artefacts)"
+ST_EO_before,[],Nothing aberrant (low amplitude ocular artefacts)
+ST_EO_after,[],Nothing aberrant (low amplitude ocular artefacts)
+VG_EO_before,[],"Fp1, Fpz, Fp2 (Electrodes affected by ocular artefacts)"
+VG_EO_after,[],"Fp1, AF7, P9, Fpz, Fp2, AF8 (Electrodes affected by ocular/physiological artefacts)"
+VG_EO_Before,[],"F4, F8, FT8, FC4 (bad for only a short period of time at the end of the trial) TP7 (ok for now)"
+VG_EO_After,[],"Fp1, AF7, F7, Iz, Fpz, Fp2 (Nothing aberrant (low amplitude ocular artefacts, reference artefact at the beginning of the trial)"
+WC_control_EO_Before,[],TP8 (more variation but low amplitudes)
+WC_control_EO_After,[],Nothing aberrant (low amplitude ocular artefacts)
+ZZ_EO_before,[],"P9, PO8 (Main electrodes affected by physiological artefacts)"
+AP_EO_Before,[],Nothing aberrant (low amplitude ocular artefacts)
+AP_EO_After,[],Nothing aberrant (low amplitude ocular artefacts)
+Des_F_EO_Before,[],High amplitude physiological artefact
+Des_F_EO_After,[],Nothing aberrant (low amplitude ocular artefacts)
+MG_EO_Before,[],"F3, F5 (Electrodes affected by low amplitude artefacts)"
+MG_EO_After,'T7',"FC5, TP8 (Electrodes affected by low amplitude artefacts)"
+NM_EO_before,[],"Fp1, Fpz, Fp2, AF8 (Electrodes affected by ocular artefacts)"
+NM_EO_after,[],"Fp1, Fpz, Fp2, AF8 (Electrodes affected by ocular artefacts)"
+SE_EO_before,[],Nothing aberrant (low amplitude ocular artefacts)
+SE_EO_after,[],Nothing aberrant (low amplitude ocular artefacts)
