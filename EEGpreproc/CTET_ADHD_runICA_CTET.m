@@ -31,7 +31,10 @@ for nF=1:length(files)
     % %     if isempty(findbefore)
     % %         continue;
     % %     end
-    
+     if exist([save_path filesep 'CTET_ADHD_behav_' file_name(1:end-4) '.txt'])==0
+        warning(sprintf('missing behavioural file for %s\n',file_name(1:end-4)));
+        continue;
+    end
     if exist([data_path filesep 'Preproc' filesep 'Icfe_ft_' file_name(1:end-4) '.mat'])==0
         
         hdr=ft_read_header([folder_name filesep file_name]);
