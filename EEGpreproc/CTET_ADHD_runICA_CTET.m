@@ -42,6 +42,9 @@ for nF=1:length(files)
         
         %%% take out trial
         thisF=match_str(badChannels_table.FileName,['fe_ft_' file_name(1:end-4)]);
+        if isempty(thisF)
+            continue;
+        end
         tempChannels=badChannels_table.Bad_Channels{thisF}; tempChannels(tempChannels==' ')=[];
         eval(sprintf('badChannels={%s};',tempChannels));
         badChannels(cellfun(@isempty,badChannels))=[];
