@@ -30,14 +30,14 @@ cfg.comment   = 'no';
 ft_topoplotIC(cfg, comp)
 set(gcf,'Position',[1           1        1871         984]);
 
-figure;
-cfg = [];
-cfg.component = 33:length(comp.label);       % specify the component(s) that should be plotted
-cfg.layout    = layout; % specify the layout file that should be used for plotting
-cfg.comment   = 'no';
-%     cfg.marker = 'labels';
-ft_topoplotIC(cfg, comp)
-set(gcf,'Position',[1           1        1871         984]);
+% figure;
+% cfg = [];
+% cfg.component = 33:length(comp.label);       % specify the component(s) that should be plotted
+% cfg.layout    = layout; % specify the layout file that should be used for plotting
+% cfg.comment   = 'no';
+% %     cfg.marker = 'labels';
+% ft_topoplotIC(cfg, comp)
+% set(gcf,'Position',[1           1        1871         984]);
 
 
 %% reject trials
