@@ -14,7 +14,8 @@ cfg.layout = 'biosemi64.lay';
 cfg.center      = 'yes';
 layout=ft_prepare_layout(cfg);
 
-badChannels_table=readtable('../ADHD_CTET_task_BadChannels.csv');
+% badChannels_table=readtable('../ADHD_CTET_task_BadChannels.csv');
+load('../ADHD_CTET_task_BadChannels.mat')
 
 %% loop on subjects
 for nF=1:length(files)
