@@ -31,14 +31,14 @@ for nF=1:length(files)
     cfg.channel      = 'all';
     cfg.method       = 'mtmconvol';
     cfg.taper        = 'hanning';
-    cfg.foi          =  0.5:0.5:40;                         % analysis 2 to 30 Hz in steps of .2 Hz
+    cfg.foi          =  0.5:0.5:30;                         % analysis 2 to 30 Hz in steps of .2 Hz
     cfg.toi         =  'all';                         % analysis 2 to 30 Hz in steps of .2 Hz
     cfg.t_ftimwin    =  ones(length(cfg.foi),1).*10;   % length of time window =6 sec
     cfg.keeptrials   = 'yes';
     TFdata           = ft_freqanalysis(cfg, data);
     
     nFc=nFc+1;
-    av_PowDataEO(nFc,:,:) = squeeze(10*log10(nanmean(TFdata.powspctrm),4));
+    av_PowDataEO(nFc,:,:) = squeeze(10*log10(nanmean(TFdata.powspctrm,4)));
 %     if redo==1 || exist([data_path filesep 'Preproc' filesep 'CIcf_ft_' file_name(1:end-4) '.mat'])==0
 %                save([data_path filesep 'Preproc' filesep 'CIcf_ft_' file_name(1:end-4)],'data');
 % 
