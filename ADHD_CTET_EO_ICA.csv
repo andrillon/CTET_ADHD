@@ -1,0 +1,86 @@
+FileName,blinks,saccade,Comments
+Icf_ft_AK_EO_Before,1,,
+Icf_ft_AM_EO_After,1,2,
+Icf_ft_AM_EO_Before,"1, 2, 3",,3 similar frontal patterns
+Icf_ft_AP_EO_After,1,9,
+Icf_ft_AP_EO_Before,2,,
+Icf_ft_AWMc_EO_After,"2, 5, 8",,"strange patterns, blinks ? "
+Icf_ft_AWMc_EO_Before,2,,
+Icf_ft_AW_EO_After,1,,
+Icf_ft_AW_EO_Before,1,,
+Icf_ft_CF_EO_after,"1, 3, 12",,
+Icf_ft_CF_EO_before,1,2,
+Icf_ft_CH_EO_After,2,,
+Icf_ft_CH_EO_Before,,,no blink pattern
+Icf_ft_DC_EO_Before,1,4,tempo not really characteristic of saccade
+Icf_ft_DF_EO_After,4,7,
+Icf_ft_DF_EO_Before,8,11,
+Icf_ft_DMC_EO_after,1,,
+Icf_ft_DMC_EO_before,1,,
+Icf_ft_DM_EO_After,1,2,
+Icf_ft_DM_EO_Before,1,4,
+Icf_ft_Des_F_EO_After,2,,
+Icf_ft_Des_F_EO_Before,25,,
+Icf_ft_EC_EO_before,1,,
+Icf_ft_ED_EO_After,1,4,
+Icf_ft_ET_EO_After,1,,
+Icf_ft_ET_EO_Before,,,
+Icf_ft_FA_EO,1,3,
+Icf_ft_FA_EO_after,3,4,
+Icf_ft_FB_EO_before,1,,
+Icf_ft_FS_EO_after,5,,
+Icf_ft_IH_EO_After,,,
+Icf_ft_IH_EO_Before,1,,
+Icf_ft_KD_EO_after,1,2,
+Icf_ft_KD_EO_before,1,2,
+Icf_ft_LB_EO_After,,,
+Icf_ft_LB_EO_Before,,,
+Icf_ft_MB2_EO_After,1,,
+Icf_ft_MB2_EO_before,1,,
+Icf_ft_MB_EO_after,1,,topography not ot ok but temporal seems good
+Icf_ft_MB_EO_before,4,5,
+Icf_ft_MC_EO_After,1,5,
+Icf_ft_MC_EO_Before,1,,
+Icf_ft_MC_control_EO_After,5,,
+Icf_ft_MC_control_EO_Before,1,,
+Icf_ft_MD_EO_After,10,,
+Icf_ft_MD_EO_Before,9,,
+Icf_ft_MG_EO_After,3,,
+Icf_ft_MG_EO_Before,4,,
+Icf_ft_MOS_EO_After,1,,
+Icf_ft_MOS_EO_Before,2,,
+Icf_ft_NB_EO_After,1,,
+Icf_ft_NB_EO_Before,1,3,saccade ? (not perfectly sym)
+Icf_ft_NK_EO_After,1,,
+Icf_ft_NK_EO_Before,1,,
+Icf_ft_NM_EO_after,1,2,saccade ? (not perfectly sym)
+Icf_ft_NM_EO_before,1,2,
+Icf_ft_NOK_EO_After,1,,
+Icf_ft_NOK_EO_Before,1,,
+Icf_ft_OD_EO_before,1,6,saccade ? (not perfectly sym)
+Icf_ft_PF_EO_after,"1, 6",,blinks
+Icf_ft_PF_EO_before,"1, 4",6,
+Icf_ft_SB_EO_Before,1,2,
+Icf_ft_SB_EO_after,1,,
+Icf_ft_SC_EO_after,1,2,saccade ? (not perfectly sym)
+Icf_ft_SC_EO_before,4,8,saccade ? (not perfectly sym)
+Icf_ft_SE_EO_after,3,5,
+Icf_ft_SE_EO_before,1,3,saccade ? (not perfectly sym)
+Icf_ft_SH_EO_before,1,2,saccade ? (not perfectly sym)
+Icf_ft_SK_2_EO_After,4,,
+Icf_ft_SK_2_EO_Before,1,,
+Icf_ft_SK_EO_after,2,,
+Icf_ft_SK_EO_before,2,,
+Icf_ft_SL_EO_after,1,2,saccade ? (not perfectly sym)
+Icf_ft_SL_EO_before,1,3,saccade ? (not perfectly sym)
+Icf_ft_SOL_EO_After,1,4,saccade ? (not perfectly sym)
+Icf_ft_SOL_EO_Before,1,3,saccade ? (not perfectly sym)
+Icf_ft_ST_EO_after,"1, 2",,blinks
+Icf_ft_ST_EO_before,"1, 2, 3",,blinks
+Icf_ft_TH_EO_After,1,,
+Icf_ft_TH_EO_Before,1,,
+Icf_ft_VG_EO_after,"1, 2",5,saccade ? (not perfectly sym)
+Icf_ft_VG_EO_before,1,8,saccade ? (not perfectly sym)
+Icf_ft_WC_control_EO_After,1,3,saccade ? (not perfectly sym)
+Icf_ft_WC_control_EO_Before,1,,
+Icf_ft_ZZ_EO_before,1,,
