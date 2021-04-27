@@ -69,7 +69,8 @@ hold on;
 plot(TFdata.freq,squeeze(mean(av_PowDataEO(:,match_str(data.label,'Oz'),:),1)))
 hold on;
 plot(TFdata.freq,squeeze(mean(av_PowDataEO(:,match_str(data.label,'Fz'),:),1)))
-
+hold on;
+legend({'Cz','Oz','Pz'})
 %% 2: Split between before and after 
 figure;
 plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(cond_PowDataEO,'Before'),match_str(data.label,'Fz'),:),1)),'Color','b')
@@ -81,21 +82,21 @@ title('Fz')
 %% 3: Split between ADHD and controls
 
 figure;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(cond_PowDataEO,'Control'),match_str(data.label,'Fz'),:),1)),'Color','b')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(group_PowDataEO,'Control'),match_str(data.label,'Fz'),:),1)),'Color','b')
 hold on;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(cond_PowDataEO,'ADHD'),match_str(data.label,'Fz'),:),1)),'Color','r')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(group_PowDataEO,'ADHD'),match_str(data.label,'Fz'),:),1)),'Color','r')
 legend({'Controls','ADHD'})
 title('Fz')
 %% 4: Split between before and after + ADHD and controls 
 
 figure;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(cond_PowDataEO,'Control'),match_str(cond_PowDataEO,'Before'),match_str(data.label,'Fz'),:),1)),'Color','b')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(group_PowDataEO,'Control'),match_str(cond_PowDataEO,'Before'),match_str(data.label,'Fz'),:),1)),'Color','b')
 hold on;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(cond_PowDataEO,'Control'),match_str(cond_PowDataEO,'After'),match_str(data.label,'Fz'),:),1)),'Color','r')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(group_PowDataEO,'Control'),match_str(cond_PowDataEO,'After'),match_str(data.label,'Fz'),:),1)),'Color','r')
 hold on;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(cond_PowDataEO,'ADHD'),match_str(cond_PowDataEO,'Before'),match_str(data.label,'Fz'),:),1)),'Color','g')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(group_PowDataEO,'ADHD'),match_str(cond_PowDataEO,'Before'),match_str(data.label,'Fz'),:),1)),'Color','g')
 hold on;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(cond_PowDataEO,'ADHD'),match_str(cond_PowDataEO,'After'),match_str(data.label,'Fz'),:),1)),'Color','y')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(group_PowDataEO,'ADHD'),match_str(cond_PowDataEO,'After'),match_str(data.label,'Fz'),:),1)),'Color','y')
 legend({'Controls Before','Controls After','ADHD Before','ADHD After'})
 title('Fz')
 
