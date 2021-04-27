@@ -17,7 +17,7 @@ nFc1=0;
 nFc2=0;
 nFc3=0;
 nFc4=0;
-for nF=1:4
+for nF=1:length(files)
     file_name = files(nF).name;
     folder_name = files(nF).folder;
     SubIDlong=file_name(9:end-4);
@@ -96,13 +96,13 @@ title('Fz')
 %% 4: Split between before and after + ADHD and controls 
 
 figure;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'Control'),match_str(cond_PowDataEO,'Before')),match_str(data.label,'Fz'),:),1)),'Color','b')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'Control'),match_str(cond_PowDataEO,'Before')),match_str(data.label,'Fz'),:),1)),'Color','g')
 hold on;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'Control'),match_str(cond_PowDataEO,'After')),match_str(data.label,'Fz'),:),1)),'Color','r')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'Control'),match_str(cond_PowDataEO,'After')),match_str(data.label,'Fz'),:),1)),'Color','c')
 hold on;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'ADHD'),match_str(cond_PowDataEO,'Before')),match_str(data.label,'Fz'),:),1)),'Color','m')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'ADHD'),match_str(cond_PowDataEO,'Before')),match_str(data.label,'Fz'),:),1)),'Color','b')
 hold on;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'ADHD'),match_str(cond_PowDataEO,'After')),match_str(data.label,'Fz'),:),1)),'Color','y')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'ADHD'),match_str(cond_PowDataEO,'After')),match_str(data.label,'Fz'),:),1)),'Color','m')
 hold on;
 legend({'Controls Before','Controls After','ADHD Before','ADHD After'})
 title('Fz')
