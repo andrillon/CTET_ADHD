@@ -74,12 +74,12 @@ plot(TFdata.freq,squeeze(mean(av_PowDataEO(:,match_str(data.label,'Oz'),:),1)))
 hold on;
 plot(TFdata.freq,squeeze(mean(av_PowDataEO(:,match_str(data.label,'Fz'),:),1)))
 hold on;
-legend({'Cz','Oz','Fz'})
+legend({'Cz','Oz','Pz'})
 %% 2: Split between before and after 
 figure;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(find_trials(cond_PowDataEO,'Before'),match_str(data.label,'Fz'),:),1)),'Color','b')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(cond_PowDataEO,'Before'),match_str(data.label,'Fz'),:),1)),'Color','b')
 hold on;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(find_trials(cond_PowDataEO,'After'),match_str(data.label,'Fz'),:),1)),'Color','r')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(cond_PowDataEO,'After'),match_str(data.label,'Fz'),:),1)),'Color','r')
 hold on;
 legend({'Before','After'})
 title('Fz')
@@ -87,22 +87,22 @@ title('Fz')
 %% 3: Split between ADHD and controls
 
 figure;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(find_trials(group_PowDataEO,'Control'),match_str(data.label,'Oz'),:),1)),'Color','b')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(group_PowDataEO,'Control'),match_str(data.label,'Fz'),:),1)),'Color','b')
 hold on;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(find_trials(group_PowDataEO,'ADHD'),match_str(data.label,'Oz'),:),1)),'Color','r')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(group_PowDataEO,'ADHD'),match_str(data.label,'Fz'),:),1)),'Color','r')
 hold on;
 legend({'Controls','ADHD'})
 title('Fz')
 %% 4: Split between before and after + ADHD and controls 
 
 figure;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(intersect(find_trials(group_PowDataEO,'Control'),find_trials(cond_PowDataEO,'Before')),match_str(data.label,'Fz'),:),1)),'Color','b')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'Control'),match_str(cond_PowDataEO,'Before')),match_str(data.label,'Fz'),:),1)),'Color','g')
 hold on;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(intersect(find_trials(group_PowDataEO,'Control'),find_trials(cond_PowDataEO,'After')),match_str(data.label,'Fz'),:),1)),'Color','b','LineStyle','--')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'Control'),match_str(cond_PowDataEO,'After')),match_str(data.label,'Fz'),:),1)),'Color','c')
 hold on;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(intersect(find_trials(group_PowDataEO,'ADHD'),find_trials(cond_PowDataEO,'Before')),match_str(data.label,'Fz'),:),1)),'Color','r')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'ADHD'),match_str(cond_PowDataEO,'Before')),match_str(data.label,'Fz'),:),1)),'Color','b')
 hold on;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(intersect(find_trials(group_PowDataEO,'ADHD'),find_trials(cond_PowDataEO,'After')),match_str(data.label,'Fz'),:),1)),'Color','r','LineStyle','--')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'ADHD'),match_str(cond_PowDataEO,'After')),match_str(data.label,'Fz'),:),1)),'Color','m')
 hold on;
 legend({'Controls Before','Controls After','ADHD Before','ADHD After'})
 title('Fz')
