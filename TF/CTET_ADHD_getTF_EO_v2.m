@@ -43,7 +43,7 @@ for nF=1:length(files)
         cfg.method       = 'mtmconvol';
         cfg.taper        = 'hanning';
         cfg.foi          =  0.5:0.2:30;                         % analysis 2 to 30 Hz in steps of .2 Hz
-        cfg.toi         =  'all';                         % analysis 2 to 30 Hz in steps of .2 Hz
+        cfg.toi         =  1:5:data.time{1}(end);                         % analysis 2 to 30 Hz in steps of .2 Hz
         cfg.t_ftimwin    =  ones(length(cfg.foi),1).*10;   % length of time window =6 sec
         cfg.keeptrials   = 'yes';
         TFdata           = ft_freqanalysis(cfg, data);
