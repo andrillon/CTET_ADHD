@@ -62,7 +62,7 @@ for nF=1:length(files)
         fooof_results = fooof(TFdata.freq, temp_Power(nE,:), f_range, settings,1);
         temp_fooof(nE,:)=fooof_results.background_params;
     end
-    av_PowDataEO(nFc,:,:) =temp_fooof;
+    av_PowDataEO_FOOF(nFc,:,:) =temp_fooof;
     
     if isempty(findstr(file_name,'efore'))==0
         nFc1=nFc1+1;
