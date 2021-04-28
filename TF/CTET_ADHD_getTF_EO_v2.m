@@ -50,7 +50,8 @@ for nF=1:length(files)
         
         save([data_path filesep 'Preproc' filesep 'TF_' file_name(1:end-4)],'TFdata');
     else
-        load([data_path filesep 'Preproc' filesep 'TF_' file_name(1:end-4)]);
+             orifile=dir([data_path filesep '*' filesep  '*' filesep SubIDlong '.bdf']);
+   load([data_path filesep 'Preproc' filesep 'TF_' file_name(1:end-4)]);
     end
     
     nFc=nFc+1;
