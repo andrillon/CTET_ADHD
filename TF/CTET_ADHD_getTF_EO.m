@@ -68,21 +68,29 @@ end
 
 %% 1: Plot average power for Cz Oz and Fz
 figure;
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(:,match_str(data.label,'Fz'),:),1)))
+hold on;
 plot(TFdata.freq,squeeze(mean(av_PowDataEO(:,match_str(data.label,'Cz'),:),1)))
+hold on;
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(:,match_str(data.label,'Pz'),:),1)))
 hold on;
 plot(TFdata.freq,squeeze(mean(av_PowDataEO(:,match_str(data.label,'Oz'),:),1)))
 hold on;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(:,match_str(data.label,'Fz'),:),1)))
-hold on;
-legend({'Cz','Oz','Pz'})
+legend({'Fz','Cz','Pz', 'Oz'});
+title('Average power spectrum : eyes open');
+xlabel('Frequency (Hz)')
+ylabel('dB Power')
+
 %% 2: Split between before and after 
 figure;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(cond_PowDataEO,'Before'),match_str(data.label,'Fz'),:),1)),'Color','b')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(cond_PowDataEO,'Before'),match_str(data.label,'Oz'),:),1)),'Color','b')
 hold on;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(cond_PowDataEO,'After'),match_str(data.label,'Fz'),:),1)),'Color','r')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(cond_PowDataEO,'After'),match_str(data.label,'Oz'),:),1)),'Color','r')
 hold on;
-legend({'Before','After'})
-title('Fz')
+legend({'Before CTET','After CTET'})
+title('Average power spectrum at electrode Oz: eyes open, before vs after the CTET task');
+xlabel('Frequency (Hz)')
+ylabel('dB Power')
 
 %% 3: Split between ADHD and controls
 
@@ -92,7 +100,9 @@ hold on;
 plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(group_PowDataEO,'ADHD'),match_str(data.label,'Fz'),:),1)),'Color','r')
 hold on;
 legend({'Controls','ADHD'})
-title('Fz')
+title('Average power spectrum at electrode Fz: eyes open, controls vs ADHDs');
+xlabel('Frequency (Hz)')
+ylabel('dB Power')
 %% 4: Split between before and after + ADHD and controls 
 
 figure;
@@ -105,5 +115,7 @@ hold on;
 plot(TFdata.freq,squeeze(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'ADHD'),match_str(cond_PowDataEO,'After')),match_str(data.label,'Fz'),:),1)),'Color','m')
 hold on;
 legend({'Controls Before','Controls After','ADHD Before','ADHD After'})
-title('Fz')
+title('Average power spectrum at electrode Fz: eyes open');
+xlabel('Frequency (Hz)')
+ylabel('dB Power')
 
