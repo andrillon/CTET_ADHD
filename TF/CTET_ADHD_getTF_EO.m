@@ -9,7 +9,6 @@ ft_defaults;
 
 files=dir([data_path filesep 'Preproc' filesep 'CIcf_ft_*.mat']);
 
-
 %% loop on subjects
 redo=1;
 nFc=0;
@@ -17,7 +16,7 @@ nFc1=0;
 nFc2=0;
 nFc3=0;
 nFc4=0;
-for nF=1:length(files)
+for nF=1:2
     file_name = files(nF).name;
     folder_name = files(nF).folder;
     SubIDlong=file_name(9:end-4);
@@ -83,12 +82,12 @@ ylabel('dB Power')
 
 %% 2: Split between before and after 
 figure;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(cond_PowDataEO,'Before'),match_str(data.label,'Oz'),:),1)),'Color','b')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(cond_PowDataEO,'Before'),match_str(data.label,'Fz'),:),1)),'Color','b')
 hold on;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(cond_PowDataEO,'After'),match_str(data.label,'Oz'),:),1)),'Color','r')
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(cond_PowDataEO,'After'),match_str(data.label,'Fz'),:),1)),'Color','r')
 hold on;
 legend({'Before CTET','After CTET'})
-title('Average power spectrum at electrode Oz: eyes open, before vs after the CTET task');
+title('Average power spectrum at electrode Fz: eyes open, before vs after the CTET task');
 xlabel('Frequency (Hz)')
 ylabel('dB Power')
 
@@ -103,6 +102,7 @@ legend({'Controls','ADHD'})
 title('Average power spectrum at electrode Fz: eyes open, controls vs ADHDs');
 xlabel('Frequency (Hz)')
 ylabel('dB Power')
+
 %% 4: Split between before and after + ADHD and controls 
 
 figure;
