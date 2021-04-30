@@ -301,39 +301,56 @@ cfg.center      = 'yes';
 layout=ft_prepare_layout(cfg);
 
 %Theta Controls Before
-temp_topoCB=squeeze(mean(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'Controls'),match_str(cond_PowDataEO,'Before')),:,TFdata.freq>4.5 & TFdata.freq<7.5),3),1));
+temp_topoCB=squeeze(mean(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'Controls'),match_str(cond_PowDataEO,'Before')),:,TFdata.freq>4.5 & TFdata.freq<7.5),4),1));
 figure;
-simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
+simpleTopoPlot_ft(temp_topoCB', layout,'labels',[],0,1);
 colorbar;
 title('Theta [4.5 7.5] Controls Before')
 
 %Theta Controls After
 temp_topoCA=squeeze(mean(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'Controls'),match_str(cond_PowDataEO,'After')),:,TFdata.freq>4.5 & TFdata.freq<7.5),3),1));
 figure;
-simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
+simpleTopoPlot_ft(temp_topoCA', layout,'labels',[],0,1);
 colorbar;
-title('Theta [4.5 7.5] Controls Before')
+title('Theta [4.5 7.5] Controls After')
 
 %Theta contrast Controls After > Before
 temp_topoCB=squeeze(mean(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'Controls'),match_str(cond_PowDataEO,'Before')),:,TFdata.freq>4.5 & TFdata.freq<7.5),3),1));
 temp_topoCA=squeeze(mean(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'Controls'),match_str(cond_PowDataEO,'After')),:,TFdata.freq>4.5 & TFdata.freq<7.5),3),1));
-temp_topo2=temp_topoCA-temp_topoCB;
+temp_topo3=temp_topoCA-temp_topoCB;
 figure;
-simpleTopoPlot_ft(temp_topo2', layout,'labels',[],0,1);
+simpleTopoPlot_ft(temp_topo3', layout,'labels',[],0,1);
 colorbar;
-title('Theta [4.5 7.5] contrast After/Before')
+title('Theta [4.5 7.5] contrast Controls After/Before')
 
 
 %Theta ADHDs Before
 temp_topoAB=squeeze(mean(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'ADHD'),match_str(cond_PowDataEO,'Before')),:,TFdata.freq>4.5 & TFdata.freq<7.5),3),1));
 figure;
-simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
+simpleTopoPlot_ft(temp_topoAB', layout,'labels',[],0,1);
 colorbar;
 title('Theta [4.5 7.5] ADHDs Before')
 
 %Theta ADHDs After
 temp_topoAA=squeeze(mean(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'ADHD'),match_str(cond_PowDataEO,'After')),:,TFdata.freq>4.5 & TFdata.freq<7.5),3),1));
 figure;
-simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
+simpleTopoPlot_ft(temp_topoAA', layout,'labels',[],0,1);
 colorbar;
 title('Theta [4.5 7.5] ADHDs after')
+
+%Theta contrast ADHDs After > Before
+temp_topoAB=squeeze(mean(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'ADHD'),match_str(cond_PowDataEO,'Before')),:,TFdata.freq>4.5 & TFdata.freq<7.5),3),1));
+temp_topoAA=squeeze(mean(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'ADHD'),match_str(cond_PowDataEO,'After')),:,TFdata.freq>4.5 & TFdata.freq<7.5),3),1));
+temp_topo4=temp_topoAA-temp_topoAB;
+figure;
+simpleTopoPlot_ft(temp_topo4', layout,'labels',[],0,1);
+colorbar;
+title('Theta [4.5 7.5] contrast ADHDs After/Before')
+
+%Theta contrast ADHDs After/Before // Controls After/Before
+
+temp_topo5=temp_topo4-temp_topo3;
+figure;
+simpleTopoPlot_ft(temp_topo2', layout,'labels',[],0,1);
+colorbar;
+title('Theta [4.5 7.5] contrast ADHD/Controls After/Before')

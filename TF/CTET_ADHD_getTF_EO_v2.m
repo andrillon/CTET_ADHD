@@ -58,42 +58,49 @@ for nF=1:length(files)
     av_PowDataEO(nFc,:,:) = squeeze(10*log10(nanmean(TFdata.powspctrm,4)));
     
     temp_Power=squeeze((nanmean(TFdata.powspctrm,4)));
-    %temp_fooof=[];
-    %for nE=1:64
-        %fooof_results = fooof(TFdata.freq, temp_Power(nE,:), f_range, settings,1);
-        %temp_fooof(nE,:)=fooof_results.background_params;
-    %end
-    %av_PowDataEO_FOOF(nFc,:,:) =temp_fooof;
+    temp_fooof=[];
+    for nE=1:64
+        fooof_results = fooof(TFdata.freq, temp_Power(nE,:), f_range, settings,1);
+        temp_fooof(nE,:)=fooof_results.background_params;
+    end
+    av_PowDataEO_FOOF(nFc,:,:) =temp_fooof;
     
     if isempty(findstr(file_name,'efore'))==0
         nFc1=nFc1+1;
         %         av_PowDataEO_Before(nFc1,:,:) = squeeze(10*log10(nanmean(TFdata.powspctrm,4)));
         cond_PowDataEO{nFc}='Before';
+        design_PowDataEO(2,nFc)=0;
     elseif isempty(findstr(file_name,'fter'))==0
         nFc2=nFc2+1;
         %         av_PowDataEO_After(nFc2,:,:) = squeeze(10*log10(nanmean(TFdata.powspctrm,4)));
         cond_PowDataEO{nFc}='After';
+        design_PowDataEO(2,nFc)=1;
+    elseif strcmp(file_name,'CIcf_ft_FA_EO.mat')
+        cond_PowDataEO{nFc}='Before';
+        design_PowDataEO(2,nFc)=0;
     end
     
     orifoldername=orifile.folder;
     if isempty(findstr(orifoldername,'controls'))==0
         nFc3=nFc3+1;
         group_PowDataEO{nFc}='Control';
+        design_PowDataEO(1,nFc)=0;
     elseif isempty(findstr(orifoldername,'adhds'))==0
         nFc4=nFc4+1;
         group_PowDataEO{nFc}='ADHD';
+        design_PowDataEO(1,nFc)=1;
     end
 end
 
 %% 1: Plot average power for Cz Oz and Fz
 figure;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(:,match_str(TFdata.label,'Fz'),:),1)))
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(:,match_str(data.label,'Fz'),:),1)))
 hold on;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(:,match_str(TFdata.label,'Cz'),:),1)))
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(:,match_str(data.label,'Cz'),:),1)))
 hold on;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(:,match_str(TFdata.label,'Pz'),:),1)))
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(:,match_str(data.label,'Pz'),:),1)))
 hold on;
-plot(TFdata.freq,squeeze(mean(av_PowDataEO(:,match_str(TFdata.label,'Oz'),:),1)))
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(:,match_str(data.label,'Oz'),:),1)))
 hold on;
 legend({'Fz','Cz','Pz', 'Oz'});
 title('Average power spectrum : eyes open');
@@ -101,15 +108,13 @@ xlabel('Frequency (Hz)')
 ylabel('dB Power')
 
 %% 2: Split between before and after
-
 figure;
-hp=[];
-[~,hp(1)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(match_str(cond_PowDataEO,'Before'),match_str(TFdata.label,'Oz'),:))),0,'b',0,'-',0.5,1,0,1,2);
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(cond_PowDataEO,'Before'),match_str(data.label,'Oz'),:),1)),'Color','b')
 hold on;
-[~,hp(2)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(match_str(cond_PowDataEO,'After'),match_str(TFdata.label,'Oz'),:))),0,'r',0,'-',0.5,1,0,1,2);
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(match_str(cond_PowDataEO,'After'),match_str(data.label,'Oz'),:),1)),'Color','r')
 hold on;
-legend(hp,{'Before','After'})
-title('Power spectrum at electrode Oz : eyes open, before vs after CTET task');
+legend({'Before CTET','After CTET'})
+title('Average power spectrum at electrode Oz: eyes open, before vs after the CTET task');
 xlabel('Frequency (Hz)')
 ylabel('dB Power')
 
@@ -117,32 +122,31 @@ ylabel('dB Power')
 
 figure;
 hp=[];
-[~,hp(1)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(match_str(group_PowDataEO,'Control'),match_str(TFdata.label,'Fp1'),:))),0,'b',0,'-',0.5,1,0,1,2);
+[~,hp(1)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(match_str(group_PowDataEO,'Control'),match_str(data.label,'Fz'),:))),0,'b',0,'-',0.5,1,0,1,2);
 hold on;
-[~,hp(2)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(match_str(group_PowDataEO,'ADHD'),match_str(TFdata.label,'Fp1'),:))),0,'r',0,'-',0.5,1,0,1,2);
+[~,hp(2)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(match_str(group_PowDataEO,'ADHD'),match_str(data.label,'Fz'),:))),0,'r',0,'-',0.5,1,0,1,2);
 hold on;
 legend(hp,{'Controls','ADHD'})
-title('Average power spectrum at electrode Fp1: eyes open, controls vs ADHDs');
+title('Average power spectrum at electrode Fz: eyes open, controls vs ADHDs');
 xlabel('Frequency (Hz)')
 ylabel('dB Power')
 %% 4: Split between before and after + ADHD and controls
 
 figure;
-hp=[];
-[~,hp(1)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(intersect(match_str(group_PowDataEO,'Control'),match_str(cond_PowDataEO,'Before')),match_str(TFdata.label,'Oz'),:))),0,'g',0,'-',0.5,1,0,1,2);
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'Control'),match_str(cond_PowDataEO,'Before')),match_str(data.label,'Fz'),:),1)),'Color','g')
 hold on;
-[~,hp(2)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(intersect(match_str(group_PowDataEO,'Control'),match_str(cond_PowDataEO,'After')),match_str(TFdata.label,'Oz'),:))),0,'c',0,'-',0.5,1,0,1,2);
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'Control'),match_str(cond_PowDataEO,'After')),match_str(data.label,'Fz'),:),1)),'Color','c')
 hold on;
-[~,hp(3)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(intersect(match_str(group_PowDataEO,'ADHD'),match_str(cond_PowDataEO,'Before')),match_str(TFdata.label,'Oz'),:))),0,'b',0,'-',0.5,1,0,1,2);
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'ADHD'),match_str(cond_PowDataEO,'Before')),match_str(data.label,'Fz'),:),1)),'Color','b')
 hold on;
-[~,hp(4)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(intersect(match_str(group_PowDataEO,'ADHD'),match_str(cond_PowDataEO,'After')),match_str(TFdata.label,'Oz'),:))),0,'m',0,'-',0.5,1,0,1,2);
+plot(TFdata.freq,squeeze(mean(av_PowDataEO(intersect(match_str(group_PowDataEO,'ADHD'),match_str(cond_PowDataEO,'After')),match_str(data.label,'Fz'),:),1)),'Color','m')
 hold on;
-legend(hp,{'Controls Before','Controls After','ADHD Before','ADHD After'})
-title('Power spectrums at electrode Oz: eyes open');
+legend({'Controls Before','Controls After','ADHD Before','ADHD After'})
+title('Average power spectrum at electrode Fz: eyes open');
 xlabel('Frequency (Hz)')
 ylabel('dB Power')
 
-%% Topographies
+%%
 
 cfg = [];
 cfg.layout = 'biosemi64.lay';
@@ -150,137 +154,29 @@ cfg.channel  = TFdata.label;
 cfg.center      = 'yes';
 layout=ft_prepare_layout(cfg);
 
-%Alpha topo
+
 temp_topo=squeeze(mean(mean(av_PowDataEO(:,:,TFdata.freq>8.5 & TFdata.freq<11.5),3),1));
 figure;
 simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
 colorbar;
 title('Alpha [8.5 11.5]')
 
-%Alpha before CTET
-temp_topo=squeeze(mean(mean(av_PowDataEO(match_str(cond_PowDataEO,'Before'),:,TFdata.freq>8.5 & TFdata.freq<11.5),3),1));
-figure;
-simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
-colorbar;
-title('Alpha [8.5 11.5] before CTET')
 
-%Alpha after CTET
-temp_topo=squeeze(mean(mean(av_PowDataEO(match_str(cond_PowDataEO,'After'),:,TFdata.freq>8.5 & TFdata.freq<11.5),3),1));
-figure;
-simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
-colorbar;
-title('Alpha [8.5 11.5] after CTET')
-
-%Alpha contrast Before > After
-temp_topo_B=squeeze(mean(mean(av_PowDataEO(match_str(cond_PowDataEO,'Before'),:,TFdata.freq>8.5 & TFdata.freq<11.5),3),1));
-temp_topo_Af=squeeze(mean(mean(av_PowDataEO(match_str(cond_PowDataEO,'After'),:,TFdata.freq>8.5 & TFdata.freq<11.5),3),1));
-temp_topo=temp_topo_B-temp_topo_Af;
-figure;
-simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
-colorbar;
-title('Alpha [8.5 11.5] contrast Before/After')
-
-%Alpha contrast After > Before
-temp_topo_B=squeeze(mean(mean(av_PowDataEO(match_str(cond_PowDataEO,'Before'),:,TFdata.freq>8.5 & TFdata.freq<11.5),3),1));
-temp_topo_Af=squeeze(mean(mean(av_PowDataEO(match_str(cond_PowDataEO,'After'),:,TFdata.freq>8.5 & TFdata.freq<11.5),3),1));
-temp_topo2=temp_topo_Af-temp_topo_B;
-figure;
-simpleTopoPlot_ft(temp_topo2', layout,'labels',[],0,1);
-colorbar;
-title('Alpha [8.5 11.5]contrast After/Before')
-
-%Alpha Controls
-temp_topo=squeeze(mean(mean(av_PowDataEO(match_str(group_PowDataEO,'Control'),:,TFdata.freq>8.5 & TFdata.freq<11.5),3),1));
-figure;
-simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
-colorbar;
-title('Alpha [8.5 11.5] Controls')
-
-%Alpha ADHDS
-temp_topo=squeeze(mean(mean(av_PowDataEO(match_str(group_PowDataEO,'ADHD'),:,TFdata.freq>8.5 & TFdata.freq<11.5),3),1));
-figure;
-simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
-colorbar;
-title('Alpha [8.5 11.5] ADHDS')
-
-%Alpha contrast Controls > ADHDs
-temp_topo_C=squeeze(mean(mean(av_PowDataEO(match_str(group_PowDataEO,'Control'),:,TFdata.freq>8.5 & TFdata.freq<11.5),3),1));
-temp_topo_A=squeeze(mean(mean(av_PowDataEO(match_str(group_PowDataEO,'ADHD'),:,TFdata.freq>8.5 & TFdata.freq<11.5),3),1));
-temp_topo=temp_topo_C-temp_topo_A;
-figure;
-simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
-colorbar;
-title('Alpha [8.5 11.5] contrast Controls/ADHDs')
-
-%Alpha contrast ADHDs > Controls
-temp_topo_C=squeeze(mean(mean(av_PowDataEO(match_str(group_PowDataEO,'Control'),:,TFdata.freq>8.5 & TFdata.freq<11.5),3),1));
-temp_topo_A=squeeze(mean(mean(av_PowDataEO(match_str(group_PowDataEO,'ADHD'),:,TFdata.freq>8.5 & TFdata.freq<11.5),3),1));
-temp_topo2=temp_topo_A-temp_topo_C;
-figure;
-simpleTopoPlot_ft(temp_topo2', layout,'labels',[],0,1);
-colorbar;
-title('Alpha [8.5 11.5] contrast ADHDs/Controls')
-
-%Theta topo
 temp_topo=squeeze(mean(mean(av_PowDataEO(:,:,TFdata.freq>4.5 & TFdata.freq<7.5),3),1));
 figure;
 simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
 colorbar;
 title('Theta [4.5 7.5]')
 
-%Theta before CTET
-temp_topo=squeeze(mean(mean(av_PowDataEO(match_str(cond_PowDataEO,'Before'),:,TFdata.freq>4.5 & TFdata.freq<7.5),3),1));
-figure;
-simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
-colorbar;
-title('Theta [4.5 7.5] before CTET')
 
-%Theta after CTET
-temp_topo=squeeze(mean(mean(av_PowDataEO(match_str(cond_PowDataEO,'After'),:,TFdata.freq>4.5 & TFdata.freq<7.5),3),1));
-figure;
-simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
-colorbar;
-title('Theta [4.5 7.5] after CTET')
-
-%Theta contrast Before > After
-temp_topo_B=squeeze(mean(mean(av_PowDataEO(match_str(cond_PowDataEO,'Before'),:,TFdata.freq>4.5 & TFdata.freq<7.5),3),1));
-temp_topo_Af=squeeze(mean(mean(av_PowDataEO(match_str(cond_PowDataEO,'After'),:,TFdata.freq>4.5 & TFdata.freq<7.5),3),1));
-temp_topo=temp_topo_B-temp_topo_Af;
-figure;
-simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
-colorbar;
-title('Theta [4.5 7.5] contrast Before/After')
-
-%Theta contrast After > Before
-temp_topo_B=squeeze(mean(mean(av_PowDataEO(match_str(cond_PowDataEO,'Before'),:,TFdata.freq>4.5 & TFdata.freq<7.5),3),1));
-temp_topo_Af=squeeze(mean(mean(av_PowDataEO(match_str(cond_PowDataEO,'After'),:,TFdata.freq>4.5 & TFdata.freq<7.5),3),1));
-temp_topo2=temp_topo_Af-temp_topo_B;
-figure;
-simpleTopoPlot_ft(temp_topo2', layout,'labels',[],0,1);
-colorbar;
-title('Theta [4.5 7.5] contrast After/Before')
-
-%Theta Controls
-temp_topo=squeeze(mean(mean(av_PowDataEO(match_str(group_PowDataEO,'Control'),:,TFdata.freq>4.5 & TFdata.freq<7.5),3),1));
-figure;
-simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
-colorbar;
-title('Theta [4.5 7.5] Controls')
-
-%Theta ADHDS
-temp_topo=squeeze(mean(mean(av_PowDataEO(match_str(group_PowDataEO,'ADHD'),:,TFdata.freq>4.5 & TFdata.freq<7.5),3),1));
-figure;
-simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
-colorbar;
-title('Theta [4.5 7.5] ADHDS')
-
-%Theta contrast Controls > ADHDs
 temp_topo_C=squeeze(mean(mean(av_PowDataEO(match_str(group_PowDataEO,'Control'),:,TFdata.freq>4.5 & TFdata.freq<7.5),3),1));
 temp_topo_A=squeeze(mean(mean(av_PowDataEO(match_str(group_PowDataEO,'ADHD'),:,TFdata.freq>4.5 & TFdata.freq<7.5),3),1));
 temp_topo=temp_topo_C-temp_topo_A;
 figure;
 simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
 colorbar;
+<<<<<<< HEAD
+<<<<<<< HEAD
 title('Theta [4.5 7.5] contrast Controls/ADHDs')
 
 %Theta contrast ADHDs > Controls
@@ -292,7 +188,7 @@ simpleTopoPlot_ft(temp_topo2', layout,'labels',[],0,1);
 colorbar;
 title('Theta [4.5 7.5] contrast ADHDs/Controls')
 
-%% Comparisons
+%Comparisons
 
 cfg = [];
 cfg.layout = 'biosemi64.lay';
@@ -348,9 +244,38 @@ colorbar;
 title('Theta [4.5 7.5] contrast ADHDs After/Before')
 
 %Theta contrast ADHDs After/Before // Controls After/Before
+=======
+title('Theta [4.5 7.5]')
+>>>>>>> 22cfccd9716b79e2259227c05e491e9a86fcd7d6
+=======
+title('Theta [4.5 7.5]')
+>>>>>>> 22cfccd9716b79e2259227c05e491e9a86fcd7d6
 
-temp_topo5=temp_topo4-temp_topo3;
-figure;
-simpleTopoPlot_ft(temp_topo2', layout,'labels',[],0,1);
-colorbar;
-title('Theta [4.5 7.5] contrast ADHD/Controls After/Before')
+%% Permutation
+% cfg = [];
+% cfg.channel          = 'all';
+% cfg.latency          = 'all';
+% cfg.frequency        = 'all';
+% cfg.method           = 'montecarlo';
+% cfg.statistic        = 'ft_statfun_indepsamplesT';
+% cfg.correctm         = 'cluster';
+% cfg.clusteralpha     = 0.05;
+% cfg.clusterstatistic = 'maxsum';
+% cfg.minnbchan        = 2;
+% cfg.tail             = 0;
+% cfg.clustertail      = 0;
+% cfg.alpha            = 0.025;
+% cfg.numrandomization = 500;
+% % prepare_neighbours determines what sensors may form clusters
+% cfg_neighb.method    = 'distance';
+% cfg.neighbours       = ft_prepare_neighbours(cfg_neighb, dataFC);
+% 
+% design = zeros(1,size(freqFIC_planar_cmb.powspctrm,1) + size(freqFC_planar_cmb.powspctrm,1));
+% design(1,1:size(freqFIC_planar_cmb.powspctrm,1)) = 1;
+% design(1,(size(freqFIC_planar_cmb.powspctrm,1)+1):(size(freqFIC_planar_cmb.powspctrm,1)+...
+% size(freqFC_planar_cmb.powspctrm,1))) = 2;
+% 
+% cfg.design           = design;
+% cfg.ivar             = 1;
+% 
+% [stat] = ft_freqstatistics(cfg, freqFIC_planar_cmb, freqFC_planar_cmb);
