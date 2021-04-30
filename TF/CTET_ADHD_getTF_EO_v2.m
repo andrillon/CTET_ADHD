@@ -69,19 +69,26 @@ for nF=1:length(files)
         nFc1=nFc1+1;
         %         av_PowDataEO_Before(nFc1,:,:) = squeeze(10*log10(nanmean(TFdata.powspctrm,4)));
         cond_PowDataEO{nFc}='Before';
+        design_PowDataEO(2,nFc)=0;
     elseif isempty(findstr(file_name,'fter'))==0
         nFc2=nFc2+1;
         %         av_PowDataEO_After(nFc2,:,:) = squeeze(10*log10(nanmean(TFdata.powspctrm,4)));
         cond_PowDataEO{nFc}='After';
+        design_PowDataEO(2,nFc)=1;
+    elseif strcmp(file_name,'CIcf_ft_FA_EO.mat')
+        cond_PowDataEO{nFc}='Before';
+        design_PowDataEO(2,nFc)=0;
     end
     
     orifoldername=orifile.folder;
     if isempty(findstr(orifoldername,'controls'))==0
         nFc3=nFc3+1;
         group_PowDataEO{nFc}='Control';
+        design_PowDataEO(1,nFc)=0;
     elseif isempty(findstr(orifoldername,'adhds'))==0
         nFc4=nFc4+1;
         group_PowDataEO{nFc}='ADHD';
+        design_PowDataEO(1,nFc)=1;
     end
 end
 
@@ -169,3 +176,32 @@ figure;
 simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
 colorbar;
 title('Theta [4.5 7.5]')
+
+%% Permutation
+% cfg = [];
+% cfg.channel          = 'all';
+% cfg.latency          = 'all';
+% cfg.frequency        = 'all';
+% cfg.method           = 'montecarlo';
+% cfg.statistic        = 'ft_statfun_indepsamplesT';
+% cfg.correctm         = 'cluster';
+% cfg.clusteralpha     = 0.05;
+% cfg.clusterstatistic = 'maxsum';
+% cfg.minnbchan        = 2;
+% cfg.tail             = 0;
+% cfg.clustertail      = 0;
+% cfg.alpha            = 0.025;
+% cfg.numrandomization = 500;
+% % prepare_neighbours determines what sensors may form clusters
+% cfg_neighb.method    = 'distance';
+% cfg.neighbours       = ft_prepare_neighbours(cfg_neighb, dataFC);
+% 
+% design = zeros(1,size(freqFIC_planar_cmb.powspctrm,1) + size(freqFC_planar_cmb.powspctrm,1));
+% design(1,1:size(freqFIC_planar_cmb.powspctrm,1)) = 1;
+% design(1,(size(freqFIC_planar_cmb.powspctrm,1)+1):(size(freqFIC_planar_cmb.powspctrm,1)+...
+% size(freqFC_planar_cmb.powspctrm,1))) = 2;
+% 
+% cfg.design           = design;
+% cfg.ivar             = 1;
+% 
+% [stat] = ft_freqstatistics(cfg, freqFIC_planar_cmb, freqFC_planar_cmb);
