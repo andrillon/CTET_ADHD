@@ -106,17 +106,47 @@ xTime_offset=av_data_TG_offset.time(av_data_TG_offset.time>-0.2 & av_data_TG_off
 
 
 %%
+%Plots
 
 thisCh=match_str(chLabels,'Pz');
 
 figure;
-plot(xTime,squeeze(nanmean(all_ERP_NT(:,thisCh,:),1)),'k')
+hp=[];
+[~,hp(1)]=simpleTplot(xTime,squeeze(all_ERP_NT(:,thisCh,:)),0,'b',0,'-',0.5,1,0,1,2);
 hold on;
-plot(xTime,squeeze(nanmean(all_ERP_TG(:,thisCh,:),1)),'r')
+[~,hp(2)]=simpleTplot(xTime,squeeze(all_ERP_TG(:,thisCh,:)),0,'r',0,'-',0.5,1,0,1,2);
+hold on;
+legend(hp,{'Non Target','Target'})
+title('Event-related potentials non-target vs target');
 
 
+%%
 thisCh=match_str(chLabels,'Oz');
 figure;
-plot(xTime_offset,squeeze(nanmean(all_ERP_NT_offset(:,thisCh,:),1)),'k')
+hp=[];
+[~,hp(1)]=simpleTplot(xTime_offset,squeeze(all_ERP_NT_offset(:,thisCh,:)),0,'b',0,'-',0.5,1,0,1,2);
 hold on;
-plot(xTime_offset,squeeze(nanmean(all_ERP_TG_offset(:,thisCh,:),1)),'r')
+[~,hp(2)]=simpleTplot(xTime_offset,squeeze(all_ERP_TG_offset(:,thisCh,:)),0,'r',0,'-',0.5,1,0,1,2);
+hold on;
+legend(hp,{'Non Target','Target'})
+title('Event-related potentials offset non-target vs target');
+
+%%
+%Difference TG/NG for all subjects
+thisCh=match_str(chLabels,'Pz');
+
+figure;
+hp=[];
+diff=all_ERP_TG-all_ERP_NT;
+[~,hp(1)]=simpleTplot(xTime,squeeze(diff(:,thisCh,:)),0,'b');
+hold on;
+[~,hp(2)]=simpleTplot(xTime,squeeze(diff(intersect(match_str(chLabels,'Pz'),match_str(group_PowDataEO,'Control'))),0,'r',0,'-',0.5,1,0,1,2);
+hold on;
+[~,hp(3)]=simpleTplot(xTime,squeeze(diff(intersect(match_str(chLabels,'Pz'),match_str(group_PowDataEO,'ADHD'))),0,'y',0,'-',0.5,1,0,1,2);
+hold on;
+legend(hp,{'All subjects','Controls','ADHDs'})
+title('ERP differences between Target and Non-target trials');
+
+
+
+
