@@ -118,10 +118,10 @@ hold on;
 hold on;
 legend(hp,{'Non Target','Target'})
 title('Event-related potentials non-target vs target');
-
+xlim([-0.2 1.8])
 
 %%
-thisCh=match_str(chLabels,'Oz');
+thisCh=match_str(chLabels,'Pz');
 figure;
 hp=[];
 [~,hp(1)]=simpleTplot(xTime_offset,squeeze(all_ERP_NT_offset(:,thisCh,:)),0,'b',0,'-',0.5,1,0,1,2);
@@ -131,22 +131,59 @@ hold on;
 legend(hp,{'Non Target','Target'})
 title('Event-related potentials offset non-target vs target');
 
+%%% Plot topography [0.1-0.3]s post-offset
+
+%%
+thisCh=match_str(chLabels,'Pz');
+figure;
+hp=[];
+[~,hp(1)]=simpleTplot(xTime_offset,squeeze(all_ERP_NT_offset(:,thisCh,:)),0,'b',0,'-',0.5,1,0,1,2);
+hold on;
+[~,hp(2)]=simpleTplot(xTime_offset,squeeze(all_ERP_TG_offset(:,thisCh,:)),0,'r',0,'-',0.5,1,0,1,2);
+
+legend(hp,{'Non Target','Target'})
+title('Event-related potentials offset non-target vs target');
+
+diff_all_ERP=all_ERP_TG-all_ERP_NT;
+diff_all_ERP_offset=all_ERP_TG_offset-all_ERP_NT_offset;
+figure;
+[~,~]=simpleTplot(xTime_offset,squeeze(diff_all_ERP_offset(:,thisCh,:)),0,'k',[2 0.05 0.05 1000],'-',0.5,1,0,1,2);
+
+
 %%
 %Difference TG/NG for all subjects
 thisCh=match_str(chLabels,'Pz');
 
 figure;
+subplot(1,2,1);
 hp=[];
-diff=all_ERP_TG-all_ERP_NT;
-[~,hp(1)]=simpleTplot(xTime,squeeze(diff(:,thisCh,:)),0,'b');
+% [~,hp(1)]=simpleTplot(xTime,squeeze(diff_all_ERP(:,thisCh,:)),0,'k');
+% hold on;
+[~,hp(1)]=simpleTplot(xTime,squeeze(diff_all_ERP(match_str(group_PowDataEO,'Control'),thisCh,:)),0,'b',0,'-',0.5,1,0,1,2);
 hold on;
-[~,hp(2)]=simpleTplot(xTime,squeeze(diff(intersect(match_str(chLabels,'Pz'),match_str(group_PowDataEO,'Control'))),0,'r',0,'-',0.5,1,0,1,2);
+[~,hp(2)]=simpleTplot(xTime,squeeze(diff_all_ERP(match_str(group_PowDataEO,'ADHD'),thisCh,:)),0,'r',0,'-',0.5,1,0,1,2);
 hold on;
-[~,hp(3)]=simpleTplot(xTime,squeeze(diff(intersect(match_str(chLabels,'Pz'),match_str(group_PowDataEO,'ADHD'))),0,'y',0,'-',0.5,1,0,1,2);
-hold on;
-legend(hp,{'All subjects','Controls','ADHDs'})
+legend(hp,{'Controls','ADHDs'})
 title('ERP differences between Target and Non-target trials');
 
+subplot(1,2,2);
+hp=[];
+% [~,hp(1)]=simpleTplot(xTime_offset,squeeze(diff_all_ERP_offset(:,thisCh,:)),0,'k');
+% hold on;
+[~,hp(1)]=simpleTplot(xTime_offset,squeeze(diff_all_ERP_offset(match_str(group_PowDataEO,'Control'),thisCh,:)),0,'b',0,'-',0.5,1,0,1,2);
+hold on;
+[~,hp(2)]=simpleTplot(xTime_offset,squeeze(diff_all_ERP_offset(match_str(group_PowDataEO,'ADHD'),thisCh,:)),0,'r',0,'-',0.5,1,0,1,2);
+hold on;
+legend(hp,{'Controls','ADHDs'})
+title('ERP differences between Target and Non-target trials OFFSET');
 
 
+%%% Cluster difference ADHD and controls separaterly for onset-locked and
+%%% offset-locked data
 
+
+%%
+All_Conds=double(ismember(group_PowDataEO,'Control'))+1;
+[realpos_lin realneg_lin]=get_cluster_permutation_aov(squeeze(diff_all_ERP(:,thisCh,:)),All_Conds',...
+        0.05,0.1,100,xTime);
+    
