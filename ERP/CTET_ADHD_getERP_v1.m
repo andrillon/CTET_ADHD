@@ -194,7 +194,7 @@ title('Topography difference target/non target trials [0.3-0.8]s post-offset')
 
 diff_all_ERP=all_ERP_TG-all_ERP_NT;
 diff_all_ERP_offset=all_ERP_TG_offset-all_ERP_NT_offset;
-thisCh=match_str(chLabels,'Fz');
+thisCh=match_str(chLabels,'Oz');
 figure;
 subplot(1,2,1);
 [~,~]=simpleTplot(xTime,squeeze(diff_all_ERP(:,thisCh,:)),0,'k',[2 0.05 0.05 1000],'-',0.5,1,0,1,2);
@@ -205,7 +205,7 @@ title('ERP differences between Target and Non-target trials for all subjects OFF
 
 %%
 %Difference TG/NG for Controls and ADHDs
-thisCh=match_str(chLabels,'Pz');
+thisCh=match_str(chLabels,'Fz');
 
 figure;
 subplot(1,2,1);
@@ -287,5 +287,5 @@ title('Topography difference target/non target trials [0.1-0.3]s post-offset for
 %%
 All_Conds=double(ismember(group_PowDataEO,'Control'))+1;
 [realpos_lin realneg_lin]=get_cluster_permutation_aov(squeeze(diff_all_ERP(:,thisCh,:)),All_Conds',...
-        0.05,0.1,100,xTime);
+        0.05,0.05,500,xTime);
     
