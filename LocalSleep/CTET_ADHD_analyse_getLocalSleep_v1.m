@@ -38,7 +38,7 @@ for nF=1:length(files)
     
     all_Waves=[];
     
-    for nBl=1:size(data.trial)
+    for nBl=1:size(data.trial,2)
         temp_data=data.trial{nBl}(:,:);
         temp_data=temp_data-repmat(mean(temp_data(match_str(data.label,{'TP7','TP8'}),:),1),size(temp_data,1),1);
         temp_data=temp_data-repmat(mean(temp_data,2),1,size(temp_data,2));
