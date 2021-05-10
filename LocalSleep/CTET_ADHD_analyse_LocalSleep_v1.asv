@@ -105,14 +105,14 @@ cfg.layout = 'biosemi64.lay';
 cfg.center      = 'yes';
 layout=ft_prepare_layout(cfg);
 
-SW_topo=squeeze(mean(mean(all_slowWaves(match_str(group_SW,'Control'),:,:))));
+SW_topoC=squeeze(mean(mean(all_slowWaves(match_str(group_SW,'Control'),1),2))
 figure;
-simpleTopoPlot_ft(SW_topo', layout,'labels',[],0,1);
-colorbar
+simpleTopoPlot_ft(SW_topoC', layout,'labels',[],0,1);
+colorbar;
 title('Topography of average SW density for Controls')
 
-SW_topo=squeeze(mean(mean(all_slowWaves(match_str(group_SW,'ADHD'),:,:))));
+SW_topoA=squeeze(mean(mean(all_slowWaves(match_str(group_SW,'ADHD'),1),2))
 figure;
-simpleTopoPlot_ft(SW_topo', layout,'labels',[],0,1);
+simpleTopoPlot_ft(SW_topoA', layout,'labels',[],0,1);
 colorbar;
 title('Topography of average SW density for ADHDs')
