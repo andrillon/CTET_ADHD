@@ -48,7 +48,7 @@ for nF=1:length(files)
     end
         
     %load([data_path filesep 'Preproc' filesep 'CIcfeblock_ft_SW_' file_name(1:end-4)]); %,'slow_Waves','paramSW')
-    load([data_path filesep 'Preproc' filesep 'fixThr_CIcfeblock_ft_SW_' file_name(1:end-4)]); %,'slow_Waves','paramSW')
+    load([data_path filesep 'Preproc' filesep 'relThrCTR_CIcfeblock_ft_SW_' file_name(1:end-4)]); %,'slow_Waves','paramSW')
     % 1: Subject Number
     % 2: Block Number
     % 3: Electrode Number
