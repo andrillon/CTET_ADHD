@@ -12,10 +12,16 @@ files=dir([data_path filesep '*' filesep '*' filesep '*CTET*.bdf']);
 
 cfg = [];
 cfg.layout = 'biosemi64.lay';
+layout=ft_prepare_layout(cfg);
+
+cfg = [];
+cfg.layout = 'biosemi64.lay';
+cfg.channel = layout.label;
+cfg.channel(match_str(layout.label,{'Iz','P7','P8'}))=[];
 cfg.center      = 'yes';
 layout=ft_prepare_layout(cfg);
 
-ChanLabels=layout.label(1:64);
+ChanLabels=layout.label(1:end-2);
 %%
 all_slowWaves=[];
 nFc=0;
@@ -36,7 +42,11 @@ for nF=1:length(files)
     end
     table_behav=readtable([save_path filesep 'CTET_ADHD_behav_' file_name(1:end-4) '.txt']);
     hdr=ft_read_header([folder_name filesep file_name]);
-    
+    matching_elec=[];
+    for nE=1:length(layout.label)-2
+        matching_elec(nE)=(match_str(hdr.label,layout.label(nE)));
+    end
+        
     %load([data_path filesep 'Preproc' filesep 'CIcfeblock_ft_SW_' file_name(1:end-4)]); %,'slow_Waves','paramSW')
     load([data_path filesep 'Preproc' filesep 'fixThr_CIcfeblock_ft_SW_' file_name(1:end-4)]); %,'slow_Waves','paramSW')
     % 1: Subject Number
@@ -50,6 +60,8 @@ for nF=1:length(files)
     for nBl=1:8
         these_SWelectrodes=slow_Waves(slow_Waves(:,2)==nBl,3);
         nout=hist(these_SWelectrodes,1:64);
+        nout=nout(matching_elec);
+
         sub_table_behav=table_behav(table_behav.BlockN==nBl,:);
         duration_block=(sub_table_behav.Sample(end)-sub_table_behav.Sample(1))/hdr.Fs/60;
         densSW=nout/duration_block;
@@ -60,21 +72,21 @@ for nF=1:length(files)
         for nE=1:64
             byElec_Amplitude(nE)=mean(these_Amplitude(these_SWelectrodes==nE));
         end
-         all_slowWaves_P2P(nFc,nBl,:)=byElec_Amplitude;
+         all_slowWaves_P2P(nFc,nBl,:)=byElec_Amplitude(matching_elec);
          
         these_DWslope=slow_Waves(slow_Waves(:,2)==nBl,12);
         byElec_Amplitude=nan(1,64);
         for nE=1:64
             byElec_Amplitude(nE)=mean(these_DWslope(these_SWelectrodes==nE));
         end
-         all_slowWaves_DWslope(nFc,nBl,:)=byElec_Amplitude;
+         all_slowWaves_DWslope(nFc,nBl,:)=byElec_Amplitude(matching_elec);
          
         these_UPWslope=slow_Waves(slow_Waves(:,2)==nBl,13);
         byElec_Amplitude=nan(1,64);
         for nE=1:64
             byElec_Amplitude(nE)=mean(these_UPWslope(these_SWelectrodes==nE));
         end
-         all_slowWaves_UPWslope(nFc,nBl,:)=byElec_Amplitude;
+         all_slowWaves_UPWslope(nFc,nBl,:)=byElec_Amplitude(matching_elec);
    end
     
     orifoldername=files(nF).folder;
@@ -105,36 +117,31 @@ hold on;
 legend(hp,{'Controls','ADHDs'})
 title('Averaged slow-waves density across blocks at Oz');
 
-% Scalp topographies of average SW density
-
-cfg = [];
-cfg.layout = 'biosemi64.lay';
-cfg.center      = 'yes';
-layout=ft_prepare_layout(cfg);
+%% Scalp topographies of average SW density
 
 % all subjects
-SW_topo=squeeze(nanmean(nanmean(all_slowWaves,1),2));
+SW_topo=squeeze(nanmean(nanmean(all_slowWaves(:,:,ismember(ChanLabels,layout.label)),1),2));
 figure;
 subplot(1,3,1);
-simpleTopoPlot_ft(SW_topo, layout,'labels',[],0,1);
+simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar;
 title('Topography of average SW density')
-caxis([1 11])
+caxis([1 11]/2)
 
 % ADHD and controls separately
 subplot(1,3,2);
-SW_topo=squeeze(nanmean(nanmean(all_slowWaves(match_str(group_SW,'Control'),:,:))));
-simpleTopoPlot_ft(SW_topo, layout,'labels',[],0,1);
+SW_topo=squeeze(nanmean(nanmean(all_slowWaves(match_str(group_SW,'Control'),:,ismember(ChanLabels,layout.label)))));
+simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar
 title('Topography of average SW density for Controls')
-caxis([1 11])
+caxis([1 11]/2)
 
 subplot(1,3,3);
-SW_topo=squeeze(nanmean(nanmean(all_slowWaves(match_str(group_SW,'ADHD'),:,:))));
-simpleTopoPlot_ft(SW_topo, layout,'labels',[],0,1);
+SW_topo=squeeze(nanmean(nanmean(all_slowWaves(match_str(group_SW,'ADHD'),:,ismember(ChanLabels,layout.label)))));
+simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar;
 title('Topography of average SW density for ADHDs')
-caxis([1 11])
+caxis([1 11]/2)
 
 %% 
 % Average P2P amplitude across blocks at Cz
