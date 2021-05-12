@@ -103,19 +103,19 @@ end
 % all subjects
 figure;
 hp=[];
-[~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves(:,:,match_str(ChanLabels,'Cz'))),0,'k',0,'-',0.5,1,0,1,2);
-title('Averaged slow-waves density across blocks at Cz');
+[~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves(:,:,match_str(ChanLabels,'Oz'))),0,'k',0,'-',0.5,1,0,1,2);
+title('Averaged slow-waves density across blocks at Oz');
 
 % ADHD and controls separately
 
 figure;
 hp=[];
-[~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves(match_str(group_SW,'Control'),:,match_str(ChanLabels,'Oz'))),0,'b',0,'-',0.5,1,0,1,2);
+[~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves(match_str(group_SW,'Control'),:,match_str(ChanLabels,'Fz'))),0,'b',0,'-',0.5,1,0,1,2);
 hold on;
-[~,hp(2)]=simpleTplot(1:8,squeeze(all_slowWaves(match_str(group_SW,'ADHD'),:,match_str(ChanLabels,'Oz'))),0,'r',0,'-',0.5,1,0,1,2);
+[~,hp(2)]=simpleTplot(1:8,squeeze(all_slowWaves(match_str(group_SW,'ADHD'),:,match_str(ChanLabels,'Fz'))),0,'r',0,'-',0.5,1,0,1,2);
 hold on;
 legend(hp,{'Controls','ADHDs'})
-title('Averaged slow-waves density across blocks at Oz');
+title('Averaged slow-waves density across blocks at Fz');
 
 %% Scalp topographies of average SW density
 
@@ -126,7 +126,7 @@ subplot(1,3,1);
 simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar;
 title('Topography of average SW density')
-caxis([1 11]/2)
+caxis([5 11.5])
 
 % ADHD and controls separately
 subplot(1,3,2);
@@ -134,148 +134,147 @@ SW_topo=squeeze(nanmean(nanmean(all_slowWaves(match_str(group_SW,'Control'),:,is
 simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar
 title('Topography of average SW density for Controls')
-caxis([1 11]/2)
+caxis([5 11.5])
 
 subplot(1,3,3);
 SW_topo=squeeze(nanmean(nanmean(all_slowWaves(match_str(group_SW,'ADHD'),:,ismember(ChanLabels,layout.label)))));
 simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar;
 title('Topography of average SW density for ADHDs')
-caxis([1 11]/2)
+caxis([5 11.5])
 
 %% 
 % Average P2P amplitude across blocks at Cz
 % all subjects
 figure;
 hp=[];
-[~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves_P2P(:,:,match_str(ChanLabels,'Oz'))),0,'k',0,'-',0.5,1,0,1,2);
-title('Averaged slow-waves P2P across blocks at Oz');
+[~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves_P2P(:,:,match_str(ChanLabels,'Fz'))),0,'k',0,'-',0.5,1,0,1,2);
+title('Averaged slow-waves P2P across blocks at Fz');
 
 % ADHD and controls separately
 
 figure;
 hp=[];
-[~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves_P2P(match_str(group_SW,'Control'),:,match_str(ChanLabels,'Fz'))),0,'b',0,'-',0.5,1,0,1,2);
+[~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves_P2P(match_str(group_SW,'Control'),:,match_str(ChanLabels,'Oz'))),0,'b',0,'-',0.5,1,0,1,2);
 hold on;
-[~,hp(2)]=simpleTplot(1:8,squeeze(all_slowWaves_P2P(match_str(group_SW,'ADHD'),:,match_str(ChanLabels,'Fz'))),0,'r',0,'-',0.5,1,0,1,2);
+[~,hp(2)]=simpleTplot(1:8,squeeze(all_slowWaves_P2P(match_str(group_SW,'ADHD'),:,match_str(ChanLabels,'Oz'))),0,'r',0,'-',0.5,1,0,1,2);
 hold on;
 legend(hp,{'Controls','ADHDs'})
-title('Averaged slow-waves P2P across blocks at Fz');
+title('Averaged slow-waves P2P across blocks at Oz');
 
 % Scalp topographies of P2P amplitude
 % all subjects
 
 figure;
 subplot(1,3,1);
-SW_topo=squeeze(nanmean(nanmean(all_slowWaves_P2P,1),2));
-simpleTopoPlot_ft(SW_topo, layout,'labels',[],0,1);
+SW_topo=squeeze(nanmean(nanmean(all_slowWaves_P2P(:,:,ismember(ChanLabels,layout.label)))));
+simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar;
 title('Topography of average SW P2P')
-caxis([44 55])
+caxis([20 50])
 
 % ADHD and controls separately
 subplot(1,3,2);
-SW_topo=squeeze(nanmean(nanmean(all_slowWaves_P2P(match_str(group_SW,'Control'),:,:))));
-simpleTopoPlot_ft(SW_topo, layout,'labels',[],0,1);
+SW_topo=squeeze(nanmean(nanmean(all_slowWaves_P2P(match_str(group_SW,'Control'),:,ismember(ChanLabels,layout.label)))));
+simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar
 title('Topography of average SW P2P for Controls')
-caxis([44 55])
+caxis([20 50])
 
 subplot(1,3,3);
-SW_topo=squeeze(nanmean(nanmean(all_slowWaves_P2P(match_str(group_SW,'ADHD'),:,:))));
-simpleTopoPlot_ft(SW_topo, layout,'labels',[],0,1);
+SW_topo=squeeze(nanmean(nanmean(all_slowWaves_P2P(match_str(group_SW,'ADHD'),:,ismember(ChanLabels,layout.label)))));
+simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar;
 title('Topography of average SW P2P for ADHDs')
-caxis([44 55])
+caxis([20 50])
 
 %%
 % Average Downward slope across blocks
 % all subjects
 figure;
 hp=[];
-[~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves_DWslope(:,:,match_str(ChanLabels,'Cz'))),0,'k',0,'-',0.5,1,0,1,2);
-title('Averaged slow-waves Downward slope across blocks at Cz');
+[~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves_DWslope(:,:,match_str(ChanLabels,'Oz'))),0,'k',0,'-',0.5,1,0,1,2);
+title('Averaged slow-waves Downward slope across blocks at Oz');
 
 % ADHD and controls separately
 
 figure;
 hp=[];
-[~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves_DWslope(match_str(group_SW,'Control'),:,match_str(ChanLabels,'Fz'))),0,'b',0,'-',0.5,1,0,1,2);
+[~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves_DWslope(match_str(group_SW,'Control'),:,match_str(ChanLabels,'Oz'))),0,'b',0,'-',0.5,1,0,1,2);
 hold on;
-[~,hp(2)]=simpleTplot(1:8,squeeze(all_slowWaves_DWslope(match_str(group_SW,'ADHD'),:,match_str(ChanLabels,'Fz'))),0,'r',0,'-',0.5,1,0,1,2);
+[~,hp(2)]=simpleTplot(1:8,squeeze(all_slowWaves_DWslope(match_str(group_SW,'ADHD'),:,match_str(ChanLabels,'Oz'))),0,'r',0,'-',0.5,1,0,1,2);
 hold on;
 legend(hp,{'Controls','ADHDs'})
-title('Averaged slow-waves Downward slope across blocks at Fz');
+title('Averaged slow-waves Downward slope across blocks at Oz');
 
 % Scalp topographies of DW slope
 % all subjects
 
-SW_topo=squeeze(nanmean(nanmean(all_slowWaves_DWslope,1),2));
-figure;
+SW_topo=squeeze(nanmean(nanmean(all_slowWaves_DWslope(:,:,ismember(ChanLabels,layout.label)))));
 subplot(1,3,1);
-simpleTopoPlot_ft(SW_topo, layout,'labels',[],0,1);
+simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar;
 title('Topography of average SW Downward slope')
-caxis([290 510])
+caxis([190 500])
 
 % ADHD and controls separately
-SW_topo=squeeze(nanmean(nanmean(all_slowWaves_DWslope(match_str(group_SW,'Control'),:,:))));
+SW_topo=squeeze(nanmean(nanmean(all_slowWaves_DWslope(match_str(group_SW,'Control'),:,ismember(ChanLabels,layout.label)))));
 subplot(1,3,2);
-simpleTopoPlot_ft(SW_topo, layout,'labels',[],0,1);
+simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar
 title('Topography of average SW Downward slope for Controls')
-caxis([290 510])
+caxis([190 500])
 
-SW_topo=squeeze(nanmean(nanmean(all_slowWaves_DWslope(match_str(group_SW,'ADHD'),:,:))));
+SW_topo=squeeze(nanmean(nanmean(all_slowWaves_DWslope(match_str(group_SW,'ADHD'),:,ismember(ChanLabels,layout.label)))));
 subplot(1,3,3);
-simpleTopoPlot_ft(SW_topo, layout,'labels',[],0,1);
+simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar;
 title('Topography of average SW Downward slope for ADHDs')
-caxis([290 510])
+caxis([190 500])
 
 %%
 % Average Upward slope across blocks
 % all subjects
 figure;
 hp=[];
-[~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves_UPWslope(:,:,match_str(ChanLabels,'Cz'))),0,'k',0,'-',0.5,1,0,1,2);
-title('Averaged slow-waves Upward slope across blocks at Cz');
+[~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves_UPWslope(:,:,match_str(ChanLabels,'Oz'))),0,'k',0,'-',0.5,1,0,1,2);
+title('Averaged slow-waves Upward slope across blocks at Oz');
 
 % ADHD and controls separately
 
 figure;
 hp=[];
-[~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves_UPWslope(match_str(group_SW,'Control'),:,match_str(ChanLabels,'Cz'))),0,'b',0,'-',0.5,1,0,1,2);
+[~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves_UPWslope(match_str(group_SW,'Control'),:,match_str(ChanLabels,'Oz'))),0,'b',0,'-',0.5,1,0,1,2);
 hold on;
-[~,hp(2)]=simpleTplot(1:8,squeeze(all_slowWaves_UPWslope(match_str(group_SW,'ADHD'),:,match_str(ChanLabels,'Cz'))),0,'r',0,'-',0.5,1,0,1,2);
+[~,hp(2)]=simpleTplot(1:8,squeeze(all_slowWaves_UPWslope(match_str(group_SW,'ADHD'),:,match_str(ChanLabels,'Oz'))),0,'r',0,'-',0.5,1,0,1,2);
 hold on;
 legend(hp,{'Controls','ADHDs'})
-title('Averaged slow-waves Upward slope across blocks at Cz');
+title('Averaged slow-waves Upward slope across blocks at Oz');
 
 % Scalp topographies of DW slope
 % all subjects
-SW_topo=squeeze(nanmean(nanmean(all_slowWaves_UPWslope,1),2));
+SW_topo=squeeze(nanmean(nanmean(all_slowWaves_UPWslope(:,:,ismember(ChanLabels,layout.label)))));
 figure;
 subplot(1,3,1);
-simpleTopoPlot_ft(SW_topo, layout,'labels',[],0,1);
+simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar;
 title('Topography of average SW Upward slope')
-caxis([290 510])
+caxis([190 500])
 
 % ADHD and controls separately
-SW_topo=squeeze(nanmean(nanmean(all_slowWaves_UPWslope(match_str(group_SW,'Control'),:,:))));
+SW_topo=squeeze(nanmean(nanmean(all_slowWaves_UPWslope(match_str(group_SW,'Control'),:,ismember(ChanLabels,layout.label)))));
 subplot(1,3,2);
-simpleTopoPlot_ft(SW_topo, layout,'labels',[],0,1);
+simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar
 title('Topography of average SW Upward slope for Controls')
-caxis([290 510])
+caxis([190 500])
 
-SW_topo=squeeze(nanmean(nanmean(all_slowWaves_UPWslope(match_str(group_SW,'ADHD'),:,:))));
+SW_topo=squeeze(nanmean(nanmean(all_slowWaves_UPWslope(match_str(group_SW,'ADHD'),:,ismember(ChanLabels,layout.label)))));
 subplot(1,3,3);
-simpleTopoPlot_ft(SW_topo, layout,'labels',[],0,1);
+simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar;
 title('Topography of average SW Upward slope for ADHDs')
-caxis([290 510])
+caxis([190 500])
 
 %%
 % Repeated Measures ANOVA
