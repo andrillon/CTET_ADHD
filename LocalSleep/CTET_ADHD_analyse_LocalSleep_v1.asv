@@ -259,22 +259,22 @@ subplot(1,3,1);
 simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar;
 title('Topography of average SW Upward slope')
-caxis([190 500])
+caxis([290 510])
 
 % ADHD and controls separately
-SW_topo=squeeze(nanmean(nanmean(all_slowWaves_UPWslope(match_str(group_SW,'Control'),:,ismember(ChanLabels,layout.label)))));
+SW_topo=squeeze(nanmean(nanmean(all_slowWaves_UPWslope(match_str(group_SW,'Control'),:,:))));
 subplot(1,3,2);
-simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
+simpleTopoPlot_ft(SW_topo, layout,'labels',[],0,1);
 colorbar
 title('Topography of average SW Upward slope for Controls')
-caxis([190 500])
+caxis([290 510])
 
-SW_topo=squeeze(nanmean(nanmean(all_slowWaves_UPWslope(match_str(group_SW,'ADHD'),:,ismember(ChanLabels,layout.label)))));
+SW_topo=squeeze(nanmean(nanmean(all_slowWaves_UPWslope(match_str(group_SW,'ADHD'),:,:))));
 subplot(1,3,3);
-simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
+simpleTopoPlot_ft(SW_topo, layout,'labels',[],0,1);
 colorbar;
 title('Topography of average SW Upward slope for ADHDs')
-caxis([190 500])
+caxis([290 510])
 
 %%
 % Repeated Measures ANOVA
