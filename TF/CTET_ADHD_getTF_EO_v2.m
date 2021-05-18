@@ -175,9 +175,6 @@ temp_topo=temp_topo_C-temp_topo_A;
 figure;
 simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
 colorbar;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 title('Theta [4.5 7.5] contrast Controls/ADHDs')
 
 %Theta contrast ADHDs > Controls
@@ -245,15 +242,7 @@ colorbar;
 title('Theta [4.5 7.5] contrast ADHDs After/Before')
 
 %Theta contrast ADHDs After/Before // Controls After/Before
-=======
 title('Theta [4.5 7.5]')
->>>>>>> 22cfccd9716b79e2259227c05e491e9a86fcd7d6
-=======
-title('Theta [4.5 7.5]')
->>>>>>> 22cfccd9716b79e2259227c05e491e9a86fcd7d6
-=======
-title('Theta [4.5 7.5]')
->>>>>>> 22cfccd9716b79e2259227c05e491e9a86fcd7d6
 
 %% Permutation
 % cfg = [];

@@ -164,25 +164,50 @@ for nF=1:length(files)
     writetable(this_table,[save_path filesep 'CTET_ADHD_behav_' File_Name(1:end-4) '.txt']);
 
     for nbl=1:8
+        [dprime,crit]=calc_dprime(this_behav(this_behav(:,3)==nbl & this_behav(:,4)==0,6)==1,this_behav(this_behav(:,3)==nbl & this_behav(:,4)==1,7)==0);
         resblock_mat=[resblock_mat; [nF nbl nanmean(this_behav(this_behav(:,3)==nbl & this_behav(:,4)==0,6)==1) nanmean(this_behav(this_behav(:,3)==nbl & this_behav(:,4)==0,6)==0) ...
-            nanmean(this_behav(this_behav(:,3)==nbl & this_behav(:,4)==1,7)==1) nanmean(this_behav(this_behav(:,3)==nbl & this_behav(:,4)==1,7)==0) nanmean(this_behav(this_behav(:,3)==nbl & this_behav(:,4)==1 & this_behav(:,7)==1,9)) nanstd(this_behav(this_behav(:,3)==nbl & this_behav(:,4)==1 & this_behav(:,7)==1,9))]];
+            nanmean(this_behav(this_behav(:,3)==nbl & this_behav(:,4)==1,7)==1) nanmean(this_behav(this_behav(:,3)==nbl & this_behav(:,4)==1,7)==0) nanmean(this_behav(this_behav(:,3)==nbl & this_behav(:,4)==1 & this_behav(:,7)==1,9)) nanstd(this_behav(this_behav(:,3)==nbl & this_behav(:,4)==1 & this_behav(:,7)==1,9)) ...
+            dprime crit]];
         groupblock_cond=[groupblock_cond ; {Group}];
     end
     
 end
 
 %%
-table2=array2table(resblock_mat,'VariableNames',{'SubID','BlockN','CR','FA','Hit','Miss','Hit_RT','stdRT'});
+table2=array2table(resblock_mat,'VariableNames',{'SubID','BlockN','CR','FA','Hit','Miss','Hit_RT','stdRT','dprime','crit'});
 table2.Group=groupblock_cond;
 table2.SubID=categorical(table2.SubID);
 table2.Group=categorical(table2.Group);
 table2.Group=reordercats(table2.Group,[2,1]);
 
-mdl1=fitlme(table2,'Hit_RT~1+Group+(1|SubID)');
-mdl2=fitlme(table2,'FA~1+Group+(1|SubID)');
-mdl3=fitlme(table2,'Miss~1+Group+(1|SubID)');
-mdl4=fitlme(table2,'stdRT~1+Group+(1|SubID)');
-mdl5=fitlme(table2,'Hit~1+Group+(1|SubID)');
+mdl0c=fitlme(table2,'Miss~1+BlockN+(1|SubID)');
+mdl1c=fitlme(table2,'Miss~1+BlockN+Group+(1|SubID)');
+compare(mdl0c,mdl1c) % LRStat (Chi-square Likelihood Ratio Test) pValue
+
+mdl0b=fitlme(table2,'FA~1+BlockN+(1|SubID)');
+mdl1b=fitlme(table2,'FA~1+BlockN+Group+(1|SubID)');
+compare(mdl0b,mdl1b) % LRStat (Chi-square Likelihood Ratio Test) pValue
+
+mdl0a=fitlme(table2,'Hit_RT~1+BlockN+(1|SubID)');
+mdl1a=fitlme(table2,'Hit_RT~1+BlockN+Group+(1|SubID)');
+compare(mdl0a,mdl1a) % LRStat (Chi-square Likelihood Ratio Test) pValue
+
+mdl0d=fitlme(table2,'stdRT~1+BlockN+(1|SubID)');
+mdl1d=fitlme(table2,'stdRT~1+BlockN+Group+(1|SubID)');
+compare(mdl0d,mdl1d) % LRStat (Chi-square Likelihood Ratio Test) pValue
+
+% mdl0e=fitlme(table2,'Hit~1+BlockN+(1|SubID)');
+% mdl1e=fitlme(table2,'Hit~1+BlockN+Group+(1|SubID)');
+% compare(mdl0e,mdl1e) % LRStat (Chi-square Likelihood Ratio Test) pValue
+% 
+% mdl0f=fitlme(table2,'dprime~1+BlockN+(1|SubID)');
+% mdl1f=fitlme(table2,'dprime~1+BlockN+Group+(1|SubID)');
+% compare(mdl0f,mdl1f) % LRStat (Chi-square Likelihood Ratio Test) pValue
+% 
+% mdl0g=fitlme(table2,'crit~1+BlockN+(1|SubID)');
+% mdl1g=fitlme(table2,'crit~1+BlockN+Group+(1|SubID)');
+% compare(mdl0g,mdl1g) % LRStat (Chi-square Likelihood Ratio Test) pValue
+
 
 writetable(table2,[save_path filesep 'CTET_ADHD_behav_resblock.txt']);
 

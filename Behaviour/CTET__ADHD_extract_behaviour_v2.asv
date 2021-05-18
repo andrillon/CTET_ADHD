@@ -178,10 +178,15 @@ table2.SubID=categorical(table2.SubID);
 table2.Group=categorical(table2.Group);
 table2.Group=reordercats(table2.Group,[2,1]);
 
-mdl1=fitlme(table2,'Hit_RT~1+Group+(1|SubID)');
+mdl0a=fitlme(table2,'Hit_RT~1+(1|SubID)');
+mdl1a=fitlme(table2,'Hit_RT~1+Group+(1|SubID)');
+
 mdl2=fitlme(table2,'FA~1+Group+(1|SubID)');
+
 mdl3=fitlme(table2,'Miss~1+Group+(1|SubID)');
+
 mdl4=fitlme(table2,'stdRT~1+Group+(1|SubID)');
+
 mdl5=fitlme(table2,'Hit~1+Group+(1|SubID)');
 
 writetable(table2,[save_path filesep 'CTET_ADHD_behav_resblock.txt']);
@@ -298,3 +303,80 @@ set(h1{2},'LineWidth',2,'SizeData',72,'MarkerFaceAlpha',0.7);
 set(h2{2},'LineWidth',2,'SizeData',72,'MarkerFaceAlpha',0.7);
 set(gca,'XLim', [0.0 0.3], 'YLim', ylim.*[0.5 1.7]);
 format_fig; title('Hit'); legend([h1{1} h2{1}], {'Controls', 'ADHDs'});
+
+%%
+%% Repeated Measures plot
+%Hit
+data_to_plot=[];
+group_labels={'CTR','ADHD'};
+for i = 1:8 % number of repetitions
+    for j = 1:2 % number of group
+        data_to_plot{i, j} = table2.Hit(table2.BlockN==i & table2.Group==group_labels{j});
+    end
+end
+
+figure; hold on;
+h   = rm_raincloud(data_to_plot, Colors(1:2,:));
+% set(gca, 'YLim', [-0.3 1.6]);
+title(['Hits per block']);
+format_fig;
+
+%Miss
+data_to_plot=[];
+group_labels={'CTR','ADHD'};
+for i = 1:8 % number of repetitions
+    for j = 1:2 % number of group
+        data_to_plot{i, j} = table2.Miss(table2.BlockN==i & table2.Group==group_labels{j});
+    end
+end
+
+figure; hold on;
+h   = rm_raincloud(data_to_plot, Colors(1:2,:));
+% set(gca, 'YLim', [-0.3 1.6]);
+title(['Misses per block']);
+format_fig;
+
+%False Alarms
+data_to_plot=[];
+group_labels={'CTR','ADHD'};
+for i = 1:8 % number of repetitions
+    for j = 1:2 % number of group
+        data_to_plot{i, j} = table2.FA(table2.BlockN==i & table2.Group==group_labels{j});
+    end
+end
+
+figure; hold on;
+h   = rm_raincloud(data_to_plot, Colors(1:2,:));
+% set(gca, 'YLim', [-0.3 1.6]);
+title(['False alarms per block']);
+format_fig;
+
+%Hit RT
+data_to_plot=[];
+group_labels={'CTR','ADHD'};
+for i = 1:8 % number of repetitions
+    for j = 1:2 % number of group
+        data_to_plot{i, j} = table2.Hit_RT(table2.BlockN==i & table2.Group==group_labels{j});
+    end
+end
+
+figure; hold on;
+h   = rm_raincloud(data_to_plot, Colors(1:2,:));
+% set(gca, 'YLim', [-0.3 1.6]);
+title(['Hit RTs per block']);
+format_fig;
+
+%stdRT
+data_to_plot=[];
+group_labels={'CTR','ADHD'};
+for i = 1:8 % number of repetitions
+    for j = 1:2 % number of group
+        data_to_plot{i, j} = table2.stdRT(table2.BlockN==i & table2.Group==group_labels{j});
+    end
+end
+
+figure; hold on;
+h   = rm_raincloud(data_to_plot, Colors(1:2,:));
+% set(gca, 'YLim', [-0.3 1.6]);
+title(['stdRTs per block']);
+format_fig;
