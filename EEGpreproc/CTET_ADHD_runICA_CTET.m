@@ -18,6 +18,7 @@ layout=ft_prepare_layout(cfg);
 load('../ADHD_CTET_task_BadChannels.mat')
 
 %% loop on subjects
+redo=0;
 for nF=1:length(files)
     file_name = files(nF).name;
     folder_name = files(nF).folder;
@@ -36,7 +37,7 @@ for nF=1:length(files)
         warning(sprintf('missing behavioural file for %s\n',file_name(1:end-4)));
         continue;
     end
-    if exist([data_path filesep 'Preproc' filesep 'Icfe_ft_' file_name(1:end-4) '.mat'])==0
+    if redo==1 || exist([data_path filesep 'Preproc' filesep 'Icfe_ft_' file_name(1:end-4) '.mat'])==0
         
         hdr=ft_read_header([folder_name filesep file_name]);
         load([data_path filesep 'Preproc' filesep 'fe_ft_' file_name(1:end-4)]);
