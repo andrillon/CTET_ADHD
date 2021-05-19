@@ -173,6 +173,26 @@ for nF=1:length(files)
     
 end
 
+%% 
+table1=array2table(res_mat,'VariableNames',{'SubID','TrialN','Sample','BlockN','StimType','rawRT','corrNT','corrTG','ITI','RT'});
+table1.Group=group_cond;
+table1.SubID=categorical(table1.SubID);
+table1.Group=categorical(table1.Group);
+table1.Group=reordercats(table1.Group,[2,1]);
+
+mdl0c=fitlme(table1,'corrTG~1+BlockN+(1|SubID)');
+mdl1c=fitlme(table1,'corrTG~1+BlockN+Group+(1|SubID)');
+compare(mdl0c,mdl1c) % LRStat (Chi-square Likelihood Ratio Test) pValue
+
+mdl0b=fitlme(table1,'corrNT~1+BlockN+(1|SubID)');
+mdl1b=fitlme(table1,'corrNT~1+BlockN+Group+(1|SubID)');
+compare(mdl0b,mdl1b) % LRStat (Chi-square Likelihood Ratio Test) pValue
+
+mdl0a=fitlme(table1,'RT~1+BlockN+(1|SubID)');
+mdl1a=fitlme(table1,'RT~1+BlockN+Group+(1|SubID)');
+compare(mdl0a,mdl1a) % LRStat (Chi-square Likelihood Ratio Test) pValue
+
+
 %%
 table2=array2table(resblock_mat,'VariableNames',{'SubID','BlockN','CR','FA','Hit','Miss','Hit_RT','stdRT','dprime','crit'});
 table2.Group=groupblock_cond;
@@ -210,6 +230,8 @@ compare(mdl0d,mdl1d) % LRStat (Chi-square Likelihood Ratio Test) pValue
 
 
 writetable(table2,[save_path filesep 'CTET_ADHD_behav_resblock.txt']);
+
+%%
 
 %%
 Colors=[253,174,97;
@@ -266,9 +288,9 @@ end
 %Miss
 figure;
 h1 = raincloud_plot(100*Miss_CTR, 'box_on', 1, 'color', Colors(1,:), 'alpha', 0.5,...
-    'box_dodge', 1, 'box_dodge_amount', .15, 'dot_dodge_amount', .15, 'box_col_match', 0,'band_width',8);
+    'box_dodge', 1, 'box_dodge_amount', .15, 'dot_dodge_amount', .15, 'box_col_match', 0,'band_width',8,'bound_data',[0 100]);
 h2 = raincloud_plot(100*Miss_ADHD, 'box_on', 1, 'color', Colors(2,:), 'alpha', 0.5,...
-    'box_dodge', 1, 'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0,'band_width',8);
+    'box_dodge', 1, 'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0,'band_width',8,'bound_data',[0 100]);
 
 set(h1{2},'LineWidth',2,'SizeData',72,'MarkerFaceAlpha',0.7);
 set(h2{2},'LineWidth',2,'SizeData',72,'MarkerFaceAlpha',0.7);
@@ -278,9 +300,9 @@ format_fig; title('MISS'); legend([h1{1} h2{1}], {'Controls', 'ADHDs'});
 %FA
 figure;
 h1 = raincloud_plot(100*FA_CTR, 'box_on', 1, 'color', Colors(1,:), 'alpha', 0.5,...
-    'box_dodge', 1, 'box_dodge_amount', .15, 'dot_dodge_amount', .15, 'box_col_match', 0,'band_width',.5);
+    'box_dodge', 1, 'box_dodge_amount', .15, 'dot_dodge_amount', .15, 'box_col_match', 0,'band_width',.5,'bound_data',[0 100]);
 h2 = raincloud_plot(100*FA_ADHD, 'box_on', 1, 'color', Colors(2,:), 'alpha', 0.5,...
-    'box_dodge', 1, 'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0,'band_width',.5);
+    'box_dodge', 1, 'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0,'band_width',.5,'bound_data',[0 100]);
 
 set(h1{2},'LineWidth',2,'SizeData',72,'MarkerFaceAlpha',0.7);
 set(h2{2},'LineWidth',2,'SizeData',72,'MarkerFaceAlpha',0.7);
@@ -303,14 +325,14 @@ format_fig; title('stdRT/meanRT'); legend([h1{1} h2{1}], {'Controls', 'ADHDs'});
 %Hit_RT
 figure;
 h1 = raincloud_plot(Hit_RT_CTR, 'box_on', 1, 'color', Colors(1,:), 'alpha', 0.5,...
-    'box_dodge', 1, 'box_dodge_amount', .15, 'dot_dodge_amount', .15, 'box_col_match', 0,'band_width',.02);
+    'box_dodge', 1, 'box_dodge_amount', .15, 'dot_dodge_amount', .15, 'box_col_match', 0,'band_width',.04);
 h2 = raincloud_plot(Hit_RT_ADHD, 'box_on', 1, 'color', Colors(2,:), 'alpha', 0.5,...
-    'box_dodge', 1, 'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0,'band_width',.02);
+    'box_dodge', 1, 'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0,'band_width',.04);
 
 set(h1{2},'LineWidth',2,'SizeData',72,'MarkerFaceAlpha',0.7);
 set(h2{2},'LineWidth',2,'SizeData',72,'MarkerFaceAlpha',0.7);
-set(gca,'XLim', [0.0 0.3], 'YLim', ylim.*[0.5 1.7]);
-format_fig; title('Hit RT'); legend([h1{1} h2{1}], {'Controls', 'ADHDs'});
+set(gca,'XLim', [1.1 1.9], 'YLim', ylim.*[0.5 1.7]);
+format_fig; title('RT (s)'); legend([h1{1} h2{1}], {'Controls', 'ADHDs'});
 
 %Hit
 figure;

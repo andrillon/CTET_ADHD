@@ -129,9 +129,10 @@ hp=[];
 [~,hp(1)]=simpleTplot(xTime,squeeze(all_ERP_TG(:,thisCh,:))-squeeze(all_ERP_NT(:,thisCh,:)),0,'r',[2 0.05 0.05 1000],'-',0.5,1,0,1,2);
 
 %%
+thisCh=match_str(chLabels,'Pz');
 diffTG_NT=squeeze(mean(all_ERP_TG(:,thisCh,xTime>1.1 & xTime<1.8)-all_ERP_NT(:,thisCh,xTime>1.1 & xTime<1.8),3));
 
-%DoubleDiff = 
+%DoubleDiff = diff_all_ERP(match_str(group_PowDataEO,'Control'))-diff_all_ERP(match_str(group_PowDataEO,'ADHD'))
 %squeeze(mean(mean(diffTG_NT((match_str(group_PowDataEO,'Control')),thisCh,xTime>1.1 & xTime<1.8)-diffTG_NT((match_str(group_PowDataEO,'ADHD'),thisCh,xTime>1.1 & xTime<1.8),3));
 Colors=[253,174,97;
     171,217,233;
@@ -142,6 +143,17 @@ h1 = raincloud_plot(diffTG_NT(match_str(group_PowDataEO,'Control')), 'box_on', 1
     'box_dodge', 1, 'box_dodge_amount', .15, 'dot_dodge_amount', .15, 'box_col_match', 0,'band_width',8);
 h2 = raincloud_plot(diffTG_NT(match_str(group_PowDataEO,'ADHD')), 'box_on', 1, 'color', Colors(2,:), 'alpha', 0.5,...
     'box_dodge', 1, 'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0,'band_width',8);
+
+[h, pV_diffGroup,~,stat_diffGroup]=ttest2(diffTG_NT(match_str(group_PowDataEO,'Control')),diffTG_NT(match_str(group_PowDataEO,'ADHD')));
+fprintf('... unpaired t-test between groups on diff ERP between TG and NT on Pz for 1.1-1.8s: p=%g, t-value=%g, df=%g\n',...
+    pV_diffGroup,stat_diffGroup.tstat,stat_diffGroup.df) % t(18)=0.90, p=0.38
+
+[h, pV_CTR,~,stat_CTR]=ttest(diffTG_NT(match_str(group_PowDataEO,'Control')),0);
+fprintf('... one-sample t-test with 0 for Controls on diff ERP between TG and NT on Pz for 1.1-1.8s: p=%g, t-value=%g, df=%g\n',...
+    pV_CTR,stat_CTR.tstat,stat_CTR.df)
+[h, pV_ADHD,~,stat_ADHD]=ttest(diffTG_NT(match_str(group_PowDataEO,'ADHD')),0);
+fprintf('... unpaired t-test with 0 for ADHD on diff ERP between TG and NT on Pz for 1.1-1.8s: p=%g, t-value=%g, df=%g\n',...
+    pV_ADHD,stat_ADHD.tstat,stat_ADHD.df)
 
 % %%
 % %Event-related potentials non-target vs target OFFSET
@@ -194,51 +206,54 @@ figure;
 simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
 colorbar;
 title('Topography difference target/non target trials [1.1-1.8]s post-onset')
-caxis([-2.5 2.5])
+caxis([-1 1]*5.2)
 
-temp_topo=squeeze(mean(mean(diff_all_ERP(match_str(group_PowDataEO,'Control'),matching_elec,xTime>1.1 & xTime<1.8),3),1));
+temp_topo_CTR=squeeze(mean(mean(diff_all_ERP(match_str(group_PowDataEO,'Control'),matching_elec,xTime>1.1 & xTime<1.8),3),1));
 figure;
-simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
+simpleTopoPlot_ft(temp_topo_CTR', layout,'on',[],0,1);
 colorbar;
 title('Topography difference target/non target trials [1.1-1.8]s post-onset for Controls')
-caxis([-2.5 2.5])
+caxis([-1 1]*5.2)
 
-temp_topo=squeeze(mean(mean(diff_all_ERP(match_str(group_PowDataEO,'ADHD'),matching_elec,xTime>1.1 & xTime<1.8),3),1));
+temp_topo_ADHD=squeeze(mean(mean(diff_all_ERP(match_str(group_PowDataEO,'ADHD'),matching_elec,xTime>1.1 & xTime<1.8),3),1));
 figure;
-simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
+simpleTopoPlot_ft(temp_topo_ADHD', layout,'on',[],0,1);
 colorbar;
 title('Topography difference target/non target trials [1.1-1.8]s post-onset for ADHDs')
-caxis([-2.5 2.5])
+caxis([-1 1]*5.2)
 
-temp_topo=squeeze(mean(mean(Doublediff(:,matching_elec,xTime>1.1 & xTime<1.8),3),1));
+cmap=cbrewer('div','RdBu',64,'nearest'); % select a sequential colorscale from yellow to red (64)
+
+temp_topo_tval=[];
+for nE=1:size(diff_all_ERP,2)
+    A=squeeze(mean(diff_all_ERP(match_str(group_PowDataEO,'Control'),nE,xTime>1.1 & xTime<1.8),3));
+    B=squeeze(mean(diff_all_ERP(match_str(group_PowDataEO,'ADHD'),nE,xTime>1.1 & xTime<1.8),3));
+   [h,pV,~,stat]=ttest2(A,B); 
+   temp_topo_tval(nE)=stat.tstat;
+end
 figure;
-simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
+simpleTopoPlot_ft(temp_topo_tval(matching_elec), layout,'on',[],0,1);
 colorbar;
-title('Topography difference target/non target trials [1.1-1.8]s post-onset')
-caxis([-2.5 2.5])
+title('Topography difference target/non target trials [1.1-1.8]s post-onset (tvalue)')
+caxis([-2.2 2.2])
 %%
 %%% Plot topography [0.3-0.8]s post-offset
-cfg = [];
-cfg.layout = 'biosemi64.lay';
-cfg.center      = 'yes';
-layout=ft_prepare_layout(cfg);
-
 %Non-target trials offset-locked
-temp_topo=squeeze(mean(mean(all_ERP_NT_offset(:,:,xTime_offset>0.3 & xTime_offset<0.8),3),1));
+temp_topo=squeeze(mean(mean(all_ERP_NT_offset(:,matching_elec,xTime_offset>0.3 & xTime_offset<0.8),3),1));
 figure;
 simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
 colorbar;
 title('Topography non-target trials [0.3-0.8]s post-offset')
 
 %Target trials offset-locked
-temp_topo=squeeze(mean(mean(all_ERP_TG_offset(:,:,xTime_offset>0.3 & xTime_offset<0.8),3),1));
+temp_topo=squeeze(mean(mean(all_ERP_TG_offset(:,matching_elec,xTime_offset>0.3 & xTime_offset<0.8),3),1));
 figure;
 simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
 colorbar;
 title('Topography target trials [0.3-0.8]s post-offset')
 
 %Difference TG/NT trials offset-locked
-temp_topo=squeeze(mean(mean(diff_all_ERP_offset(:,:,xTime_offset>0.3 & xTime_offset<0.8),3),1));
+temp_topo=squeeze(mean(mean(diff_all_ERP_offset(:,matching_elec,xTime_offset>0.3 & xTime_offset<0.8),3),1));
 figure;
 simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
 colorbar;
@@ -286,48 +301,43 @@ title('ERP differences between Target and Non-target trials OFFSET');
 %%
 %Topography Controls and ADHD
 %%% Plot topography [0.1-0.3]s post-offset
-cfg = [];
-cfg.layout = 'biosemi64.lay';
-cfg.center      = 'yes';
-layout=ft_prepare_layout(cfg);
-
 %Non-target trials offset-locked Controls
-temp_topo=squeeze(mean(mean(all_ERP_NT_offset(match_str(group_PowDataEO,'Control'),:,xTime_offset>0.1 & xTime_offset<0.3),3),1));
+temp_topo=squeeze(mean(mean(all_ERP_NT_offset(match_str(group_PowDataEO,'Control'),matching_elec,xTime_offset>0.1 & xTime_offset<0.3),3),1));
 figure;
 simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
 colorbar;
 title('Topography Controls non-target trials [0.1-0.3]s post-offset')
 
 %Target trials offset-locked Controls
-temp_topo=squeeze(mean(mean(all_ERP_TG_offset(match_str(group_PowDataEO,'Control'),:,xTime_offset>0.1 & xTime_offset<0.3),3),1));
+temp_topo=squeeze(mean(mean(all_ERP_TG_offset(match_str(group_PowDataEO,'Control'),matching_elec,xTime_offset>0.1 & xTime_offset<0.3),3),1));
 figure;
 simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
 colorbar;
 title('Topography Controls target trials [0.1-0.3]s post-offset')
 
 %Difference TG/NT trials offset-locked Controls
-temp_topo=squeeze(mean(mean(diff_all_ERP_offset(match_str(group_PowDataEO,'Control'),:,xTime_offset>0.1 & xTime_offset<0.3),3),1));
+temp_topo=squeeze(mean(mean(diff_all_ERP_offset(match_str(group_PowDataEO,'Control'),matching_elec,xTime_offset>0.1 & xTime_offset<0.3),3),1));
 figure;
 simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
 colorbar;
 title('Topography difference target/non target trials [0.1-0.3]s post-offset for Controls')
 
 %Non-target trials offset-locked ADHDs
-temp_topo=squeeze(mean(mean(all_ERP_NT_offset(match_str(group_PowDataEO,'ADHD'),:,xTime_offset>0.1 & xTime_offset<0.3),3),1));
+temp_topo=squeeze(mean(mean(all_ERP_NT_offset(match_str(group_PowDataEO,'ADHD'),matching_elec,xTime_offset>0.1 & xTime_offset<0.3),3),1));
 figure;
 simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
 colorbar;
 title('Topography ADHD non-target trials [0.1-0.3]s post-offset')
 
 %Target trials offset-locked ADHDS
-temp_topo=squeeze(mean(mean(all_ERP_TG_offset(match_str(group_PowDataEO,'ADHD'),:,xTime_offset>0.1 & xTime_offset<0.3),3),1));
+temp_topo=squeeze(mean(mean(all_ERP_TG_offset(match_str(group_PowDataEO,'ADHD'),matching_elec,xTime_offset>0.1 & xTime_offset<0.3),3),1));
 figure;
 simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
 colorbar;
 title('Topography ADHD target trials [0.1-0.3]s post-offset')
 
 %Difference TG/NT trials offset-locked ADHDs
-temp_topo=squeeze(mean(mean(diff_all_ERP_offset(match_str(group_PowDataEO,'ADHD'),:,xTime_offset>0.1 & xTime_offset<0.3),3),1));
+temp_topo=squeeze(mean(mean(diff_all_ERP_offset(match_str(group_PowDataEO,'ADHD'),matching_elec,xTime_offset>0.1 & xTime_offset<0.3),3),1));
 figure;
 simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
 colorbar;
