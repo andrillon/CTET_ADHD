@@ -108,11 +108,15 @@ diff_all_ERP_offset=all_ERP_TG_offset-all_ERP_NT_offset;
 
 thisCh=match_str(chLabels,'Pz');
 
+Colors1=[233,163,201;
+247,247,247;
+161,215,106]/256;
+
 figure;
 hp=[];
-[~,hp(1)]=simpleTplot(xTime,squeeze(all_ERP_NT(:,thisCh,:)),0,'b',0,'-',0.5,1,0,1,2);
+[~,hp(1)]=simpleTplot(xTime,squeeze(all_ERP_NT(:,thisCh,:)),0,Colors1(1,:),0,'-',0.5,1,0,1,2);
 hold on;
-[~,hp(2)]=simpleTplot(xTime,squeeze(all_ERP_TG(:,thisCh,:)),0,'r',0,'-',0.5,1,0,1,2);
+[~,hp(2)]=simpleTplot(xTime,squeeze(all_ERP_TG(:,thisCh,:)),0,Colors1(3,:),0,'-',0.5,1,0,1,2);
 hold on;
 % legend(hp,{'Non Target','Target'})
 title('Event-related potentials non-target vs target');
@@ -127,6 +131,8 @@ hp=[];
 %%
 diffTG_NT=squeeze(mean(all_ERP_TG(:,thisCh,xTime>1.1 & xTime<1.8)-all_ERP_NT(:,thisCh,xTime>1.1 & xTime<1.8),3));
 
+%DoubleDiff = diff_all_ERP(match_str(group_PowDataEO,'Control'))-diff_all_ERP(match_str(group_PowDataEO,'ADHD'))
+%squeeze(mean(mean(diffTG_NT((match_str(group_PowDataEO,'Control')),thisCh,xTime>1.1 & xTime<1.8)-diffTG_NT((match_str(group_PowDataEO,'ADHD'),thisCh,xTime>1.1 & xTime<1.8),3));
 Colors=[253,174,97;
     171,217,233;
     44,123,182]/256;
@@ -182,10 +188,31 @@ matching_elec=[];
 % colorbar;
 % title('Topography target trials [0.1-0.3]s post-offset')
 
-%Difference TG/NT trials offset-locked
+%Difference TG/NT trials onset-locked
 temp_topo=squeeze(mean(mean(diff_all_ERP(:,matching_elec,xTime>1.1 & xTime<1.8),3),1));
 figure;
-simpleTopoPlot_ft(temp_topo', layout,'labels',[],0,1);
+simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
+colorbar;
+title('Topography difference target/non target trials [1.1-1.8]s post-onset')
+caxis([-2.5 2.5])
+
+temp_topo=squeeze(mean(mean(diff_all_ERP(match_str(group_PowDataEO,'Control'),matching_elec,xTime>1.1 & xTime<1.8),3),1));
+figure;
+simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
+colorbar;
+title('Topography difference target/non target trials [1.1-1.8]s post-onset for Controls')
+caxis([-2.5 2.5])
+
+temp_topo=squeeze(mean(mean(diff_all_ERP(match_str(group_PowDataEO,'ADHD'),matching_elec,xTime>1.1 & xTime<1.8),3),1));
+figure;
+simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
+colorbar;
+title('Topography difference target/non target trials [1.1-1.8]s post-onset for ADHDs')
+caxis([-2.5 2.5])
+
+temp_topo=squeeze(mean(mean(Doublediff(:,matching_elec,xTime>1.1 & xTime<1.8),3),1));
+figure;
+simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
 colorbar;
 title('Topography difference target/non target trials [1.1-1.8]s post-onset')
 caxis([-2.5 2.5])
