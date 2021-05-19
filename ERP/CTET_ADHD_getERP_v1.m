@@ -106,7 +106,7 @@ diff_all_ERP_offset=all_ERP_TG_offset-all_ERP_NT_offset;
 %Plots
 %Event-related potentials non-target vs target 
 
-thisCh=match_str(chLabels,'Pz');
+thisCh=match_str(chLabels,'POz');
 
 Colors1=[233,163,201;
 247,247,247;
@@ -129,8 +129,8 @@ hp=[];
 [~,hp(1)]=simpleTplot(xTime,squeeze(all_ERP_TG(:,thisCh,:))-squeeze(all_ERP_NT(:,thisCh,:)),0,'r',[2 0.05 0.05 1000],'-',0.5,1,0,1,2);
 
 %%
-thisCh=match_str(chLabels,'Pz');
-diffTG_NT=squeeze(mean(all_ERP_TG(:,thisCh,xTime>1.1 & xTime<1.8)-all_ERP_NT(:,thisCh,xTime>1.1 & xTime<1.8),3));
+thisCh=match_str(chLabels,'POz');
+diffTG_NT=squeeze(mean(all_ERP_TG(:,thisCh,xTime>1 & xTime<1.8)-all_ERP_NT(:,thisCh,xTime>1 & xTime<1.8),3));
 
 %DoubleDiff = diff_all_ERP(match_str(group_PowDataEO,'Control'))-diff_all_ERP(match_str(group_PowDataEO,'ADHD'))
 %squeeze(mean(mean(diffTG_NT((match_str(group_PowDataEO,'Control')),thisCh,xTime>1.1 & xTime<1.8)-diffTG_NT((match_str(group_PowDataEO,'ADHD'),thisCh,xTime>1.1 & xTime<1.8),3));
