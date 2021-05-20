@@ -106,7 +106,7 @@ diff_all_ERP_offset=all_ERP_TG_offset-all_ERP_NT_offset;
 %Plots
 %Event-related potentials non-target vs target 
 
-thisCh=match_str(chLabels,'Pz');
+thisCh=match_str(chLabels,'POz');
 
 Colors1=[233,163,201;
 247,247,247;
@@ -129,8 +129,8 @@ hp=[];
 [~,hp(1)]=simpleTplot(xTime,squeeze(all_ERP_TG(:,thisCh,:))-squeeze(all_ERP_NT(:,thisCh,:)),0,'r',[2 0.05 0.05 1000],'-',0.5,1,0,1,2);
 
 %%
-thisCh=match_str(chLabels,'Pz');
-diffTG_NT=squeeze(mean(all_ERP_TG(:,thisCh,xTime>1.1 & xTime<1.8)-all_ERP_NT(:,thisCh,xTime>1.1 & xTime<1.8),3));
+thisCh=match_str(chLabels,'POz');
+diffTG_NT=squeeze(mean(all_ERP_TG(:,thisCh,xTime>1 & xTime<1.8)-all_ERP_NT(:,thisCh,xTime>1 & xTime<1.8),3));
 
 %DoubleDiff = diff_all_ERP(match_str(group_PowDataEO,'Control'))-diff_all_ERP(match_str(group_PowDataEO,'ADHD'))
 %squeeze(mean(mean(diffTG_NT((match_str(group_PowDataEO,'Control')),thisCh,xTime>1.1 & xTime<1.8)-diffTG_NT((match_str(group_PowDataEO,'ADHD'),thisCh,xTime>1.1 & xTime<1.8),3));
@@ -140,9 +140,14 @@ Colors=[253,174,97;
 
 figure;
 h1 = raincloud_plot(diffTG_NT(match_str(group_PowDataEO,'Control')), 'box_on', 1, 'color', Colors(1,:), 'alpha', 0.5,...
-    'box_dodge', 1, 'box_dodge_amount', .15, 'dot_dodge_amount', .15, 'box_col_match', 0,'band_width',8);
+    'box_dodge', 1, 'box_dodge_amount', .15, 'dot_dodge_amount', .15, 'box_col_match', 0,'band_width',1,'bound_data',[0 100]);
 h2 = raincloud_plot(diffTG_NT(match_str(group_PowDataEO,'ADHD')), 'box_on', 1, 'color', Colors(2,:), 'alpha', 0.5,...
-    'box_dodge', 1, 'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0,'band_width',8);
+    'box_dodge', 1, 'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0,'band_width',1);
+set(h1{2},'LineWidth',2,'SizeData',72,'MarkerFaceAlpha',0.7);
+set(h2{2},'LineWidth',2,'SizeData',72,'MarkerFaceAlpha',0.7);
+%set(gca,'XLim', [-30 40], 'YLim', ylim.*[0 0.05]);
+format_fig; %title('Diff TG/NT (s)'); legend([h1{1} h2{1}], {'Controls', 'ADHDs'});
+
 
 [h, pV_diffGroup,~,stat_diffGroup]=ttest2(diffTG_NT(match_str(group_PowDataEO,'Control')),diffTG_NT(match_str(group_PowDataEO,'ADHD')));
 fprintf('... unpaired t-test between groups on diff ERP between TG and NT on Pz for 1.1-1.8s: p=%g, t-value=%g, df=%g\n',...
@@ -222,20 +227,24 @@ colorbar;
 title('Topography difference target/non target trials [1.1-1.8]s post-onset for ADHDs')
 caxis([-1 1]*5.2)
 
-cmap=cbrewer('div','RdBu',64,'nearest'); % select a sequential colorscale from yellow to red (64)
+cmap_ttest=cbrewer('div','RdBu',64); % select a sequential colorscale from yellow to red (64)
+cmap_ttest=flipud(cmap_ttest);
 
 temp_topo_tval=[];
+temp_topo_pval=[];
 for nE=1:size(diff_all_ERP,2)
     A=squeeze(mean(diff_all_ERP(match_str(group_PowDataEO,'Control'),nE,xTime>1.1 & xTime<1.8),3));
     B=squeeze(mean(diff_all_ERP(match_str(group_PowDataEO,'ADHD'),nE,xTime>1.1 & xTime<1.8),3));
    [h,pV,~,stat]=ttest2(A,B); 
    temp_topo_tval(nE)=stat.tstat;
+   temp_topo_pval(nE)=pV;
 end
 figure;
 simpleTopoPlot_ft(temp_topo_tval(matching_elec), layout,'on',[],0,1);
+colormap(cmap_ttest);
 colorbar;
 title('Topography difference target/non target trials [1.1-1.8]s post-onset (tvalue)')
-caxis([-2.2 2.2])
+caxis([-1 1]*4)
 %%
 %%% Plot topography [0.3-0.8]s post-offset
 %Non-target trials offset-locked
