@@ -294,7 +294,7 @@ h2 = raincloud_plot(100*Miss_ADHD, 'box_on', 1, 'color', Colors(2,:), 'alpha', 0
 
 set(h1{2},'LineWidth',2,'SizeData',72,'MarkerFaceAlpha',0.7);
 set(h2{2},'LineWidth',2,'SizeData',72,'MarkerFaceAlpha',0.7);
-set(gca,'XLim', [0 100], 'YLim', ylim.*[0.5 1.7]);
+set(gca,'XLim', [-10 110], 'YLim', ylim.*[0.5 1.7]);
 format_fig; title('MISS'); legend([h1{1} h2{1}], {'Controls', 'ADHDs'});
 
 %FA
