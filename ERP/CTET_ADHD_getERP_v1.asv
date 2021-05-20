@@ -142,7 +142,7 @@ figure;
 h1 = raincloud_plot(diffTG_NT(match_str(group_PowDataEO,'Control')), 'box_on', 1, 'color', Colors(1,:), 'alpha', 0.5,...
     'box_dodge', 1, 'box_dodge_amount', .15, 'dot_dodge_amount', .15, 'box_col_match', 0,'band_width',1,'bound_data',[0 100]);
 h2 = raincloud_plot(diffTG_NT(match_str(group_PowDataEO,'ADHD')), 'box_on', 1, 'color', Colors(2,:), 'alpha', 0.5,...
-    'box_dodge', 1, 'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0,'band_width',1,'bound_data',[0 100]);
+    'box_dodge', 1, 'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0,'band_width',1);
 set(h1{2},'LineWidth',2,'SizeData',72,'MarkerFaceAlpha',0.7);
 set(h2{2},'LineWidth',2,'SizeData',72,'MarkerFaceAlpha',0.7);
 %set(gca,'XLim', [-30 40], 'YLim', ylim.*[0 0.05]);
@@ -150,14 +150,14 @@ format_fig; %title('Diff TG/NT (s)'); legend([h1{1} h2{1}], {'Controls', 'ADHDs'
 
 
 [h, pV_diffGroup,~,stat_diffGroup]=ttest2(diffTG_NT(match_str(group_PowDataEO,'Control')),diffTG_NT(match_str(group_PowDataEO,'ADHD')));
-fprintf('... unpaired t-test between groups on diff ERP between TG and NT on POz for 1.1-1.8s: p=%g, t-value=%g, df=%g\n',...
+fprintf('... unpaired t-test between groups on diff ERP between TG and NT on Pz for 1.1-1.8s: p=%g, t-value=%g, df=%g\n',...
     pV_diffGroup,stat_diffGroup.tstat,stat_diffGroup.df) % t(18)=0.90, p=0.38
 
 [h, pV_CTR,~,stat_CTR]=ttest(diffTG_NT(match_str(group_PowDataEO,'Control')),0);
-fprintf('... one-sample t-test with 0 for Controls on diff ERP between TG and NT on POz for 1.1-1.8s: p=%g, t-value=%g, df=%g\n',...
+fprintf('... one-sample t-test with 0 for Controls on diff ERP between TG and NT on Pz for 1.1-1.8s: p=%g, t-value=%g, df=%g\n',...
     pV_CTR,stat_CTR.tstat,stat_CTR.df)
 [h, pV_ADHD,~,stat_ADHD]=ttest(diffTG_NT(match_str(group_PowDataEO,'ADHD')),0);
-fprintf('... unpaired t-test with 0 for ADHD on diff ERP between TG and NT on POz for 1.1-1.8s: p=%g, t-value=%g, df=%g\n',...
+fprintf('... unpaired t-test with 0 for ADHD on diff ERP between TG and NT on Pz for 1.1-1.8s: p=%g, t-value=%g, df=%g\n',...
     pV_ADHD,stat_ADHD.tstat,stat_ADHD.df)
 
 % %%
