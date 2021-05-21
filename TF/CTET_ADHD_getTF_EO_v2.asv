@@ -327,4 +327,4 @@ caxis([-11 -3])
 
 %%
 % Fig for report Control/ADHD
-new = av_PowDataEO(match_str(group_PowDataEO,'ADHD'),:,TFdata.freq>8 & TFdata.freq<10)-squeeze(mean(av_PowDataEO(match_str(cond_PowDataEO,'Control'),:,TFdata.freq>8 & TFdata.freq<10)))
+new = av_PowDataEO(match_str(group_PowDataEO,'ADHD'),:,TFdata.freq>8 & TFdata.freq<10)-squeeze(mean(mean(av_PowDataEO(match_str(cond_PowDataEO,'After'),:,TFdata.freq>8 & TFdata.freq<10),3),1));

@@ -132,8 +132,6 @@ hp=[];
 thisCh=match_str(chLabels,'POz');
 diffTG_NT=squeeze(mean(all_ERP_TG(:,thisCh,xTime>1 & xTime<1.8)-all_ERP_NT(:,thisCh,xTime>1 & xTime<1.8),3));
 
-%DoubleDiff = diff_all_ERP(match_str(group_PowDataEO,'Control'))-diff_all_ERP(match_str(group_PowDataEO,'ADHD'))
-%squeeze(mean(mean(diffTG_NT((match_str(group_PowDataEO,'Control')),thisCh,xTime>1.1 & xTime<1.8)-diffTG_NT((match_str(group_PowDataEO,'ADHD'),thisCh,xTime>1.1 & xTime<1.8),3));
 Colors=[253,174,97;
     171,217,233;
     44,123,182]/256;

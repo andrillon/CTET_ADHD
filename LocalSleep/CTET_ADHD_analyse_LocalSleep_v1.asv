@@ -162,25 +162,25 @@ colorbar;
 title('Topography of average SW density for ADHDs')
 caxis([5 11.5])
 
-%T-values density topo
+%T-values topo
 cmap_ttest=cbrewer('div','RdBu',64); % select a sequential colorscale from yellow to red (64)
 cmap_ttest=flipud(cmap_ttest);
 
 temp_topo_tval=[];
 temp_topo_pval=[];
 for nE=1:size(all_slowWaves,2)
-    A=squeeze(nanmean(nanmean(all_slowWaves(match_str(group_SW,'Control'),:,ismember(ChanLabels,layout.label)))));
-    B=squeeze(nanmean(nanmean(all_slowWaves(match_str(group_SW,'ADHD'),:,ismember(ChanLabels,layout.label)))));
+    A=squeeze(mean(all_slowWaves(match_str(group_PowDataEO,'Control'),nE,xTime>1.1 & xTime<1.8),3));
+    B=squeeze(mean(all_slowWaves(match_str(group_PowDataEO,'ADHD'),nE,xTime>1.1 & xTime<1.8),3));
    [h,pV,~,stat]=ttest2(A,B); 
    temp_topo_tval(nE)=stat.tstat;
    temp_topo_pval(nE)=pV;
 end
 figure;
-simpleTopoPlot_ft(temp_topo_tval(matching_elec),layout,'on',[],0,1);
+simpleTopoPlot_ft(temp_topo_tval(matching_elec), layout,'on',[],0,1);
 colormap(cmap_ttest);
 colorbar;
-title('Topography difference SW density ADHD/Control (tvalue)')
-%caxis([-1 1]*4)
+title('Topography difference target/non target trials [1.1-1.8]s post-onset (tvalue)')
+caxis([-1 1]*4)
 
 %% 
 % Average P2P amplitude across blocks at Cz
@@ -246,25 +246,6 @@ colorbar;
 title('Topography of average SW P2P for ADHDs')
 caxis([20 50])
 
-%T-values P2P amplitude topo
-cmap_ttest=cbrewer('div','RdBu',64); % select a sequential colorscale from yellow to red (64)
-cmap_ttest=flipud(cmap_ttest);
-
-temp_topo_tval=[];
-temp_topo_pval=[];
-for nE=1:size(all_slowWaves_P2P,2)
-    A=squeeze(nanmean(nanmean(all_slowWaves_P2P(match_str(group_SW,'Control'),:,ismember(ChanLabels,layout.label)))));
-    B=squeeze(nanmean(nanmean(all_slowWaves_P2P(match_str(group_SW,'ADHD'),:,ismember(ChanLabels,layout.label)))));
-   [h,pV,~,stat]=ttest2(A,B); 
-   temp_topo_tval(nE)=stat.tstat;
-   temp_topo_pval(nE)=pV;
-end
-figure;
-simpleTopoPlot_ft(temp_topo_tval(matching_elec),layout,'on',[],0,1);
-colormap(cmap_ttest);
-colorbar;
-title('Topography difference SW P2P amplitude ADHD/Control (tvalue)')
-%caxis([-1 1]*4)
 %%
 % Average Downward slope across blocks
 % all subjects
