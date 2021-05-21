@@ -6,7 +6,7 @@ close all;
 run ../localdef_ADHD_CTET.m
 addpath((path_fieldtrip));
 ft_defaults;
-
+addpath(genpath(path_LSCPtools));
 files=dir([data_path filesep 'Preproc' filesep 'CIcf_ft_*.mat']);
 
 f_range = [2, 30];
@@ -16,20 +16,29 @@ addpath(genpath(fooof_path));
 %% loop on subjects
 redo=0;
 nFc=0;
-nFc1=0;
-nFc2=0;
-nFc3=0;
-nFc4=0;
+all_SubIDs=[];
 for nF=1:length(files)
     file_name = files(nF).name;
     folder_name = files(nF).folder;
     SubIDlong=file_name(9:end-4);
     SubID=file_name(9:end-4);
     seps=findstr(SubID,'_');
+    if length(seps)>1
+    SubID=SubID(1:seps(end-1)-1);
+    else
     SubID=SubID(1:seps(1)-1);
+    end
     tic;
-    fprintf('... working on %s (%g/%g)\n',file_name,nF,length(files))
     
+    if isempty(findstr(file_name,'efore'))==0 || strcmp(file_name,'CIcf_ft_FA_EO.mat')
+    nFc=nFc+1;
+        %         av_PowDataEO_Before(nFc1,:,:) = squeeze(10*log10(nanmean(TFdata.powspctrm,4)));
+        all_SubIDs{nFc}=SubID;
+    else
+        continue;
+    end
+        fprintf('... working on %s (%g/%g)\n',file_name,nF,length(files))
+
     if redo==1 || exist([data_path filesep 'Preproc' filesep 'TF_' file_name])==0
         %%% load
         load([data_path filesep 'Preproc' filesep file_name(1:end-4)]);
@@ -54,8 +63,7 @@ for nF=1:length(files)
    load([data_path filesep 'Preproc' filesep 'TF_' file_name(1:end-4)]);
     end
     
-    nFc=nFc+1;
-    av_PowDataEO(nFc,:,:) = squeeze(10*log10(nanmean(TFdata.powspctrm,4)));
+    av_PowDataEO(nFc,1,:,:) = squeeze(10*log10(nanmean(TFdata.powspctrm,4)));
     
     temp_Power=squeeze((nanmean(TFdata.powspctrm,4)));
     %temp_fooof=[];
@@ -65,31 +73,65 @@ for nF=1:length(files)
     %end
     %av_PowDataEO_FOOF(nFc,:,:) =temp_fooof;
     
-    if isempty(findstr(file_name,'efore'))==0
-        nFc1=nFc1+1;
-        %         av_PowDataEO_Before(nFc1,:,:) = squeeze(10*log10(nanmean(TFdata.powspctrm,4)));
-        cond_PowDataEO{nFc}='Before';
-        design_PowDataEO(2,nFc)=0;
-    elseif isempty(findstr(file_name,'fter'))==0
-        nFc2=nFc2+1;
-        %         av_PowDataEO_After(nFc2,:,:) = squeeze(10*log10(nanmean(TFdata.powspctrm,4)));
-        cond_PowDataEO{nFc}='After';
-        design_PowDataEO(2,nFc)=1;
-    elseif strcmp(file_name,'CIcf_ft_FA_EO.mat')
-        cond_PowDataEO{nFc}='Before';
-        design_PowDataEO(2,nFc)=0;
-    end
+    
     
     orifoldername=orifile.folder;
     if isempty(findstr(orifoldername,'controls'))==0
-        nFc3=nFc3+1;
         group_PowDataEO{nFc}='Control';
         design_PowDataEO(1,nFc)=0;
     elseif isempty(findstr(orifoldername,'adhds'))==0
-        nFc4=nFc4+1;
         group_PowDataEO{nFc}='ADHD';
         design_PowDataEO(1,nFc)=1;
     end
+end
+%%
+for nF=1:length(files)
+    file_name = files(nF).name;
+    folder_name = files(nF).folder;
+    SubIDlong=file_name(9:end-4);
+    SubID=file_name(9:end-4);
+    seps=findstr(SubID,'_');
+if length(seps)>1
+    SubID=SubID(1:seps(end-1)-1);
+    else
+    SubID=SubID(1:seps(1)-1);
+end
+tic;
+    
+         thisF=find(ismember(all_SubIDs,SubID));
+   if isempty(findstr(file_name,'fter'))==0 && isempty(thisF)==0
+        %         av_PowDataEO_Before(nFc1,:,:) = squeeze(10*log10(nanmean(TFdata.powspctrm,4)));
+    else
+        continue;
+    end
+        fprintf('... working on %s (%g/%g)\n',file_name,nF,length(files))
+
+    if redo==1 || exist([data_path filesep 'Preproc' filesep 'TF_' file_name])==0
+        %%% load
+        load([data_path filesep 'Preproc' filesep file_name(1:end-4)]);
+        
+        %%% Retrieve ADHD or control
+        orifile=dir([data_path filesep '*' filesep  '*' filesep SubIDlong '.bdf']);
+        
+        cfg              = [];
+        cfg.output       = 'pow';
+        cfg.channel      = 'all';
+        cfg.method       = 'mtmconvol';
+        cfg.taper        = 'hanning';
+        cfg.foi          =  0.5:0.2:30;                         % analysis 2 to 30 Hz in steps of .2 Hz
+        cfg.toi         =  1:5:data.time{1}(end);                         % analysis 2 to 30 Hz in steps of .2 Hz
+        cfg.t_ftimwin    =  ones(length(cfg.foi),1).*10;   % length of time window =6 sec
+        cfg.keeptrials   = 'yes';
+        TFdata           = ft_freqanalysis(cfg, data);
+        
+        save([data_path filesep 'Preproc' filesep 'TF_' file_name(1:end-4)],'TFdata');
+    else
+             orifile=dir([data_path filesep '*' filesep  '*' filesep SubIDlong '.bdf']);
+   load([data_path filesep 'Preproc' filesep 'TF_' file_name(1:end-4)]);
+    end
+    
+    av_PowDataEO(thisF,2,:,:) = squeeze(10*log10(nanmean(TFdata.powspctrm,4)));
+ 
 end
 
 %% Matching electrodes
@@ -128,9 +170,9 @@ matching_elec=[];
 %% 2: Split between before and after
 figure;
 hp=[];
-[~,hp(1)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(match_str(cond_PowDataEO,'Before'),match_str(TFdata.label,'Fz'),:))),0,[1 1 1]*0.5,0,'-',0.5,1,0,1,2);
+[~,hp(1)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(:,1,match_str(TFdata.label,'Fz'),:))),0,[1 1 1]*0.5,0,'-',0.5,1,0,1,2);
 hold on;
-[~,hp(2)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(match_str(cond_PowDataEO,'After'),match_str(TFdata.label,'Fz'),:))),0,[1 1 1]*0,0,'-',0.5,1,0,1,2);
+[~,hp(2)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(:,2,match_str(TFdata.label,'Fz'),:))),0,[1 1 1]*0,0,'-',0.5,1,0,1,2);
 hold on;
 legend(hp,{'Before CTET','After CTET'})
 title('Average power spectrum at electrode Oz: eyes open, before vs after the CTET task');
@@ -140,16 +182,16 @@ format_fig;
 
 figure;
 hp=[];
-[~,hp(1)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(match_str(cond_PowDataEO,'After'),match_str(TFdata.label,'Fz'),:)))-...
-squeeze((av_PowDataEO(match_str(cond_PowDataEO,'Before'),match_str(TFdata.label,'Fz'),:))),0,[1 1 1]*0.5,0,'-',0.5,1,0,1,2);
+[~,hp(1)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(:,2,match_str(TFdata.label,'Fz'),:)))-...
+squeeze((av_PowDataEO(:,1,match_str(TFdata.label,'Fz'),:))),0,[1 1 1]*0.5,0,'-',0.5,1,0,1,2);
 
 %% 3: Split between ADHD and controls
 
 figure;
 hp=[];
-[~,hp(1)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(match_str(group_PowDataEO,'Control'),match_str(TFdata.label,'Fz'),:))),0,'b',0,'-',0.5,1,0,1,2);
+[~,hp(1)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(match_str(group_PowDataEO,'Control'),1,match_str(TFdata.label,'Fz'),:))),0,'b',0,'-',0.5,1,0,1,2);
 hold on;
-[~,hp(2)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(match_str(group_PowDataEO,'ADHD'),match_str(TFdata.label,'Fz'),:))),0,'r',0,'-',0.5,1,0,1,2);
+[~,hp(2)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(match_str(group_PowDataEO,'ADHD'),1,match_str(TFdata.label,'Fz'),:))),0,'r',0,'-',0.5,1,0,1,2);
 hold on;
 legend(hp,{'Controls','ADHD'})
 title('Average power spectrum at electrode Fz: eyes open, controls vs ADHDs');
