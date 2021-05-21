@@ -183,15 +183,15 @@ format_fig;
 figure;
 hp=[];
 [~,hp(1)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(:,2,match_str(TFdata.label,'Fz'),:)))-...
-squeeze((av_PowDataEO(:,1,match_str(TFdata.label,'Fz'),:))),0,[1 1 1]*0.5,0,'-',0.5,1,0,1,2);
+squeeze((av_PowDataEO(:,1,match_str(TFdata.label,'Fz'),:))),0,[1 1 1]*0.5,[2 0.05 0.05 1000],'-',0.5,1,0,1,2);
 
 %% 3: Split between ADHD and controls
 
 figure;
 hp=[];
-[~,hp(1)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(match_str(group_PowDataEO,'Control'),1,match_str(TFdata.label,'Fz'),:))),0,'b',0,'-',0.5,1,0,1,2);
+[~,hp(1)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(match_str(group_PowDataEO,'Control'),2,match_str(TFdata.label,'Fz'),:))),0,'b',0,'-',0.5,1,0,1,2);
 hold on;
-[~,hp(2)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(match_str(group_PowDataEO,'ADHD'),1,match_str(TFdata.label,'Fz'),:))),0,'r',0,'-',0.5,1,0,1,2);
+[~,hp(2)]=simpleTplot(TFdata.freq,squeeze((av_PowDataEO(match_str(group_PowDataEO,'ADHD'),2,match_str(TFdata.label,'Fz'),:))),0,'r',0,'-',0.5,1,0,1,2);
 hold on;
 legend(hp,{'Controls','ADHD'})
 title('Average power spectrum at electrode Fz: eyes open, controls vs ADHDs');
