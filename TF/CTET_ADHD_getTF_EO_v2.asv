@@ -92,6 +92,24 @@ for nF=1:length(files)
     end
 end
 
+%% Matching electrodes
+cfg = [];
+cfg.layout = 'biosemi64.lay';
+layout=ft_prepare_layout(cfg);
+
+cfg = [];
+cfg.layout = 'biosemi64.lay';
+cfg.channel = layout.label;
+cfg.channel(match_str(layout.label,{'Iz','P7','P8'}))=[];
+cfg.center      = 'yes';
+layout=ft_prepare_layout(cfg);
+
+
+matching_elec=[];
+    for nE=1:length(layout.label)-2
+        matching_elec(nE)=(match_str(hdr.label,layout.label(nE)));
+    end
+
 %% 1: Plot average power for Cz Oz and Fz
 figure;
 plot(TFdata.freq,squeeze(mean(av_PowDataEO(:,match_str(TFdata.label,'Fz'),:),1)))
@@ -327,4 +345,4 @@ caxis([-11 -3])
 
 %%
 % Fig for report Control/ADHD
-new = av_PowDataEO(match_str(group_PowDataEO,'ADHD'),:,TFdata.freq>8 & TFdata.freq<10)-squeeze(mean(mean(av_PowDataEO(match_str(cond_PowDataEO,'After'),:,TFdata.freq>8 & TFdata.freq<10),3),1));
+new = av_PowDataEO(match_str(group_PowDataEO,'ADHD'),:,TFdata.freq>8 & TFdata.freq<10)-squeeze(mean(av_PowDataEO(match_str(cond_PowDataEO,'Control'),:,TFdata.freq>8 & TFdata.freq<10)))

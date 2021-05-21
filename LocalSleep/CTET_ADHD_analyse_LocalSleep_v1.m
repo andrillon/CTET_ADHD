@@ -48,7 +48,8 @@ for nF=1:length(files)
     end
         
     %load([data_path filesep 'Preproc' filesep 'CIcfeblock_ft_SW_' file_name(1:end-4)]); %,'slow_Waves','paramSW')
-    load([data_path filesep 'Preproc' filesep 'relThrCTR_CIcfeblock_ft_SW_' file_name(1:end-4)]); %,'slow_Waves','paramSW')
+     load([data_path filesep 'Preproc' filesep 'relThrCTR_CIcfeblock_ft_SW_' file_name(1:end-4)]); %,'slow_Waves','paramSW')
+    %load([data_path filesep 'Preproc' filesep 'fixThr_CIcfeblock_ft_SW_' file_name(1:end-4)]); %,'slow_Waves','paramSW')
     % 1: Subject Number
     % 2: Block Number
     % 3: Electrode Number
@@ -101,21 +102,21 @@ end
 %%
 % Average SW density across blocks
 % all subjects
-figure;
-hp=[];
-[~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves(:,:,match_str(ChanLabels,'Oz'))),0,'k',0,'-',0.5,1,0,1,2);
-title('Averaged slow-waves density across blocks at Oz');
-
-% ADHD and controls separately
-
-figure;
-hp=[];
-[~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves(match_str(group_SW,'Control'),:,match_str(ChanLabels,'Fz'))),0,'b',0,'-',0.5,1,0,1,2);
-hold on;
-[~,hp(2)]=simpleTplot(1:8,squeeze(all_slowWaves(match_str(group_SW,'ADHD'),:,match_str(ChanLabels,'Fz'))),0,'r',0,'-',0.5,1,0,1,2);
-hold on;
-legend(hp,{'Controls','ADHDs'})
-title('Averaged slow-waves density across blocks at Fz');
+% figure;
+% hp=[];
+% [~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves(:,:,match_str(ChanLabels,'Oz'))),0,'k',0,'-',0.5,1,0,1,2);
+% title('Averaged slow-waves density across blocks at Oz');
+% 
+% % ADHD and controls separately
+% 
+% figure;
+% hp=[];
+% [~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves(match_str(group_SW,'Control'),:,match_str(ChanLabels,'Fz'))),0,'b',0,'-',0.5,1,0,1,2);
+% hold on;
+% [~,hp(2)]=simpleTplot(1:8,squeeze(all_slowWaves(match_str(group_SW,'ADHD'),:,match_str(ChanLabels,'Fz'))),0,'r',0,'-',0.5,1,0,1,2);
+% hold on;
+% legend(hp,{'Controls','ADHDs'})
+% title('Averaged slow-waves density across blocks at Fz');
 
 %RaincloudPlots density
 Colors=[253,174,97;
@@ -123,16 +124,16 @@ Colors=[253,174,97;
     44,123,182]/256;
 
 figure;
-h1 = raincloud_plot(squeeze(mean(all_slowWaves(match_str(group_SW,'Control'),:,match_str(ChanLabels,'Fz')))), 'box_on', 1, 'color', Colors(1,:), 'alpha', 0.5,...
-    'box_dodge', 1, 'box_dodge_amount', .15, 'dot_dodge_amount', .15, 'box_col_match', 0,'band_width',.4,'bound_data',[0 100]);
-h2 = raincloud_plot(squeeze(mean(all_slowWaves(match_str(group_SW,'ADHD'),:,match_str(ChanLabels,'Fz')))), 'box_on', 1, 'color', Colors(2,:), 'alpha', 0.5,...
-    'box_dodge', 1, 'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0,'band_width',.4,'bound_data',[0 100]);
+h1 = raincloud_plot(squeeze(nanmean(all_slowWaves(match_str(group_SW,'Control'),:,match_str(ChanLabels,'Fz')),2)), 'box_on', 1, 'color', Colors(1,:), 'alpha', 0.5,...
+    'box_dodge', 1, 'box_dodge_amount', .15, 'dot_dodge_amount', .15, 'box_col_match', 0,'band_width',2,'bound_data',[0 100]);
+h2 = raincloud_plot(squeeze(nanmean(all_slowWaves(match_str(group_SW,'ADHD'),:,match_str(ChanLabels,'Fz')),2)), 'box_on', 1, 'color', Colors(2,:), 'alpha', 0.5,...
+    'box_dodge', 1, 'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0,'band_width',2,'bound_data',[0 100]);
 set(h1{2},'LineWidth',2,'SizeData',72,'MarkerFaceAlpha',0.7);
 set(h2{2},'LineWidth',2,'SizeData',72,'MarkerFaceAlpha',0.7);
 %set(gca,'XLim', [-30 40], 'YLim', ylim.*[0 0.05]);
 format_fig; title('Slow Waves density for Controls and ADHDs'); legend([h1{1} h2{1}], {'Controls', 'ADHDs'});
 
-[h, pV_diffGroup,~,stat_diffGroup]=ttest2(squeeze(mean(all_slowWaves(match_str(group_SW,'Control'),:,match_str(ChanLabels,'Fz')))),squeeze(mean(all_slowWaves(match_str(group_SW,'ADHD'),:,match_str(ChanLabels,'Fz')))));
+[h, pV_diffGroup,~,stat_diffGroup]=ttest2(squeeze(mean(all_slowWaves(match_str(group_SW,'Control'),:,match_str(ChanLabels,'Fz')),2)),squeeze(mean(all_slowWaves(match_str(group_SW,'ADHD'),:,match_str(ChanLabels,'Fz')),2)));
 fprintf('... unpaired t-test between groups on SW density on Fz : p=%g, t-value=%g, df=%g\n',...
     pV_diffGroup,stat_diffGroup.tstat,stat_diffGroup.df) % t(18)=0.90, p=0.38
 
@@ -141,21 +142,22 @@ fprintf('... unpaired t-test between groups on SW density on Fz : p=%g, t-value=
 % all subjects
 SW_topo=squeeze(nanmean(nanmean(all_slowWaves(:,:,ismember(ChanLabels,layout.label)),1),2));
 figure;
-subplot(1,3,1);
+%subplot(1,3,1);
 simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar;
 title('Topography of average SW density')
 caxis([5 11.5])
 
 % ADHD and controls separately
-subplot(1,3,2);
+%subplot(1,3,2);
+figure;
 SW_topo=squeeze(nanmean(nanmean(all_slowWaves(match_str(group_SW,'Control'),:,ismember(ChanLabels,layout.label)))));
 simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar
 title('Topography of average SW density for Controls')
 caxis([5 11.5])
 
-subplot(1,3,3);
+figure;
 SW_topo=squeeze(nanmean(nanmean(all_slowWaves(match_str(group_SW,'ADHD'),:,ismember(ChanLabels,layout.label)))));
 simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar;
@@ -168,38 +170,38 @@ cmap_ttest=flipud(cmap_ttest);
 
 temp_topo_tval=[];
 temp_topo_pval=[];
-for nE=1:size(all_slowWaves,2)
-    A=squeeze(nanmean(nanmean(all_slowWaves(match_str(group_SW,'Control'),:,ismember(ChanLabels,layout.label)))));
-    B=squeeze(nanmean(nanmean(all_slowWaves(match_str(group_SW,'ADHD'),:,ismember(ChanLabels,layout.label)))));
-   [h,pV,~,stat]=ttest2(A,B); 
+for nE=1:size(all_slowWaves,3)
+    A=squeeze(nanmean(all_slowWaves(match_str(group_SW,'Control'),:,nE),2));
+    B=squeeze(nanmean(all_slowWaves(match_str(group_SW,'ADHD'),:,nE),2));
+   [h,pV,~,stat]=ttest2(B,A); 
    temp_topo_tval(nE)=stat.tstat;
    temp_topo_pval(nE)=pV;
 end
 figure;
-simpleTopoPlot_ft(temp_topo_tval(matching_elec),layout,'on',[],0,1);
+simpleTopoPlot_ft(temp_topo_tval,layout,'on',[],0,1);
 colormap(cmap_ttest);
 colorbar;
 title('Topography difference SW density ADHD/Control (tvalue)')
-%caxis([-1 1]*4)
+caxis([-1 1]*4)
 
 %% 
 % Average P2P amplitude across blocks at Cz
 % all subjects
-figure;
-hp=[];
-[~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves_P2P(:,:,match_str(ChanLabels,'Fz'))),0,'k',0,'-',0.5,1,0,1,2);
-title('Averaged slow-waves P2P across blocks at Fz');
-
-% ADHD and controls separately
-
-figure;
-hp=[];
-[~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves_P2P(match_str(group_SW,'Control'),:,match_str(ChanLabels,'Fz'))),0,'b',0,'-',0.5,1,0,1,2);
-hold on;
-[~,hp(2)]=simpleTplot(1:8,squeeze(all_slowWaves_P2P(match_str(group_SW,'ADHD'),:,match_str(ChanLabels,'Fz'))),0,'r',0,'-',0.5,1,0,1,2);
-hold on;
-legend(hp,{'Controls','ADHDs'})
-title('Averaged slow-waves P2P across blocks at Fz');
+% figure;
+% hp=[];
+% [~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves_P2P(:,:,match_str(ChanLabels,'Fz'))),0,'k',0,'-',0.5,1,0,1,2);
+% title('Averaged slow-waves P2P across blocks at Fz');
+% 
+% % ADHD and controls separately
+% 
+% figure;
+% hp=[];
+% [~,hp(1)]=simpleTplot(1:8,squeeze(all_slowWaves_P2P(match_str(group_SW,'Control'),:,match_str(ChanLabels,'Fz'))),0,'b',0,'-',0.5,1,0,1,2);
+% hold on;
+% [~,hp(2)]=simpleTplot(1:8,squeeze(all_slowWaves_P2P(match_str(group_SW,'ADHD'),:,match_str(ChanLabels,'Fz'))),0,'r',0,'-',0.5,1,0,1,2);
+% hold on;
+% legend(hp,{'Controls','ADHDs'})
+% title('Averaged slow-waves P2P across blocks at Fz');
 
 %RaincloudPlots P2P amplitude
 Colors=[253,174,97;
@@ -207,16 +209,16 @@ Colors=[253,174,97;
     44,123,182]/256;
 
 figure;
-h1 = raincloud_plot(squeeze(mean(all_slowWaves_P2P(match_str(group_SW,'Control'),:,match_str(ChanLabels,'Fz')))), 'box_on', 1, 'color', Colors(1,:), 'alpha', 0.5,...
-    'box_dodge', 1, 'box_dodge_amount', .15, 'dot_dodge_amount', .15, 'box_col_match', 0,'band_width',.6,'bound_data',[0 100]);
-h2 = raincloud_plot(squeeze(mean(all_slowWaves_P2P(match_str(group_SW,'ADHD'),:,match_str(ChanLabels,'Fz')))), 'box_on', 1, 'color', Colors(2,:), 'alpha', 0.5,...
-    'box_dodge', 1, 'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0,'band_width',.6,'bound_data',[0 100]);
+h1 = raincloud_plot(squeeze(mean(all_slowWaves_P2P(match_str(group_SW,'Control'),:,match_str(ChanLabels,'Fz')),2)), 'box_on', 1, 'color', Colors(1,:), 'alpha', 0.5,...
+    'box_dodge', 1, 'box_dodge_amount', .15, 'dot_dodge_amount', .15, 'box_col_match', 0,'band_width',1,'bound_data',[0 100]);
+h2 = raincloud_plot(squeeze(mean(all_slowWaves_P2P(match_str(group_SW,'ADHD'),:,match_str(ChanLabels,'Fz')),2)), 'box_on', 1, 'color', Colors(2,:), 'alpha', 0.5,...
+    'box_dodge', 1, 'box_dodge_amount', .35, 'dot_dodge_amount', .35, 'box_col_match', 0,'band_width',1,'bound_data',[0 100]);
 set(h1{2},'LineWidth',2,'SizeData',72,'MarkerFaceAlpha',0.7);
 set(h2{2},'LineWidth',2,'SizeData',72,'MarkerFaceAlpha',0.7);
 %set(gca,'XLim', [-10 50], 'YLim', ylim.*[0 0.2]);
 format_fig; title('Slow Waves P2P amplitude for Controls and ADHDs'); legend([h1{1} h2{1}], {'Controls', 'ADHDs'});
 
-[h, pV_diffGroup,~,stat_diffGroup]=ttest2(squeeze(mean(all_slowWaves_P2P(match_str(group_SW,'Control'),:,match_str(ChanLabels,'Fz')))),squeeze(mean(all_slowWaves(match_str(group_SW,'ADHD'),:,match_str(ChanLabels,'Fz')))));
+[h, pV_diffGroup,~,stat_diffGroup]=ttest2(squeeze(mean(all_slowWaves_P2P(match_str(group_SW,'Control'),:,match_str(ChanLabels,'Fz')),2)),squeeze(mean(all_slowWaves(match_str(group_SW,'ADHD'),:,match_str(ChanLabels,'Fz')),2)));
 fprintf('... unpaired t-test between groups on SW P2P amplitude on Fz : p=%g, t-value=%g, df=%g\n',...
     pV_diffGroup,stat_diffGroup.tstat,stat_diffGroup.df) % t(18)=0.90, p=0.38
 
@@ -224,7 +226,6 @@ fprintf('... unpaired t-test between groups on SW P2P amplitude on Fz : p=%g, t-
 % all subjects
 
 figure;
-subplot(1,3,1);
 SW_topo=squeeze(nanmean(nanmean(all_slowWaves_P2P(:,:,ismember(ChanLabels,layout.label)))));
 simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar;
@@ -232,14 +233,14 @@ title('Topography of average SW P2P')
 caxis([20 50])
 
 % ADHD and controls separately
-subplot(1,3,2);
+figure;
 SW_topo=squeeze(nanmean(nanmean(all_slowWaves_P2P(match_str(group_SW,'Control'),:,ismember(ChanLabels,layout.label)))));
 simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar
 title('Topography of average SW P2P for Controls')
 caxis([20 50])
 
-subplot(1,3,3);
+figure;
 SW_topo=squeeze(nanmean(nanmean(all_slowWaves_P2P(match_str(group_SW,'ADHD'),:,ismember(ChanLabels,layout.label)))));
 simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar;
@@ -250,20 +251,21 @@ caxis([20 50])
 cmap_ttest=cbrewer('div','RdBu',64); % select a sequential colorscale from yellow to red (64)
 cmap_ttest=flipud(cmap_ttest);
 
-temp_topo_tval=[];
-temp_topo_pval=[];
-for nE=1:size(all_slowWaves_P2P,2)
-    A=squeeze(nanmean(nanmean(all_slowWaves_P2P(match_str(group_SW,'Control'),:,ismember(ChanLabels,layout.label)))));
-    B=squeeze(nanmean(nanmean(all_slowWaves_P2P(match_str(group_SW,'ADHD'),:,ismember(ChanLabels,layout.label)))));
-   [h,pV,~,stat]=ttest2(A,B); 
-   temp_topo_tval(nE)=stat.tstat;
-   temp_topo_pval(nE)=pV;
+temp_topo_tval_P2P=[];
+temp_topo_pval_P2P=[];
+for nE=1:size(all_slowWaves_P2P,3)
+    A=squeeze(nanmean(all_slowWaves_P2P(match_str(group_SW,'Control'),:,nE),2));
+    B=squeeze(nanmean(all_slowWaves_P2P(match_str(group_SW,'ADHD'),:,nE),2));
+   [h,pV,~,stat]=ttest2(B,A); 
+   temp_topo_tval_P2P(nE)=stat.tstat;
+   temp_topo_pval_P2P(nE)=pV;
 end
 figure;
-simpleTopoPlot_ft(temp_topo_tval(matching_elec),layout,'on',[],0,1);
+simpleTopoPlot_ft(temp_topo_tval_P2P,layout,'on',[],0,1);
 colormap(cmap_ttest);
 colorbar;
-title('Topography difference SW P2P amplitude ADHD/Control (tvalue)')
+title('Topography difference SW amplitude ADHD/Control (tvalue)')
+caxis([-1 1]*4)
 %caxis([-1 1]*4)
 %%
 % Average Downward slope across blocks
