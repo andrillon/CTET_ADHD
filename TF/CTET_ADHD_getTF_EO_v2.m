@@ -174,7 +174,7 @@ for nE=1:size(av_PowDataEO,3)
    temp_topo_pval(nE)=pV;
 end
 figure;
-simpleTopoPlot_ft(temp_topo_tval,layout,'on',[],0,1);
+simpleTopoPlot_ft(temp_topo_tval(matching_elec),layout,'on',[],0,1);
 colormap(cmap_ttest);
 colorbar;
 title('Topography difference TF Power before CTET ADHD/Control (tvalue)')
