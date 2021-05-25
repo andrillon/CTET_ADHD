@@ -7,6 +7,8 @@ run ../localdef_ADHD_CTET.m
 addpath((path_fieldtrip));
 ft_defaults;
 addpath(genpath(path_LSCPtools));
+addpath(genpath(path_RainCloudPlot));
+
 files=dir([data_path filesep 'Preproc' filesep 'CIcf_ft_*.mat']);
 
 f_range = [2, 30];
@@ -180,6 +182,47 @@ colorbar;
 title('Topography difference TF Power before CTET ADHD/Control (tvalue)')
 caxis([-1 1]*4)
 
+
+
+temp_topo_tval=[];
+temp_topo_pval=[];
+for nE=1:size(av_PowDataEO,3)
+    A=squeeze(nanmean(av_PowDataEO(match_str(group_PowDataEO,'Control'),2,nE,TFdata.freq>4 & TFdata.freq<7),4));
+    B=squeeze(nanmean(av_PowDataEO(match_str(group_PowDataEO,'ADHD'),2,nE,TFdata.freq>4 & TFdata.freq<7),4));
+   [h,pV,~,stat]=ttest2(B,A); 
+   temp_topo_tval(nE)=stat.tstat;
+   temp_topo_pval(nE)=pV;
+end
+figure;
+simpleTopoPlot_ft(temp_topo_tval(matching_elec),layout,'on',[],0,1);
+colormap(cmap_ttest);
+colorbar;
+title('Topography difference TF Power after CTET ADHD/Control (tvalue)')
+caxis([-1 1]*4)
+
+
+%% Plot interaction on Fz
+
+datatoplot=[];
+% read into cell array of the appropriate dimensions
+for i = 1:2
+    for j = 1:2
+        if j==1
+        datatoplot{i, j} = squeeze(nanmean(av_PowDataEO(match_str(group_PowDataEO,'Control'),i,match_str(layout.label,'Fz'),TFdata.freq>4 & TFdata.freq<7),4));
+        else
+        datatoplot{i, j} = squeeze(nanmean(av_PowDataEO(match_str(group_PowDataEO,'ADHD'),i,match_str(layout.label,'Fz'),TFdata.freq>4 & TFdata.freq<7),4));
+        end
+    end
+end
+
+figure;
+
+% make figure
+h   = rm_raincloud(datatoplot, Colors(1:2,:));
+% set(gca, 'YLim', [-0.3 1.6]);
+% title(['Figure M9' newline 'Repeated measures raincloud plot']);
+% set(gca,'YTick',1:2,'YTickLabel',{'Before','After'});
+format_fig;
 %% 1: Plot average power for Cz Oz and Fz
 % figure;
 % plot(TFdata.freq,squeeze(mean(av_PowDataEO(:,match_str(TFdata.label,'Fz'),:),1)))
