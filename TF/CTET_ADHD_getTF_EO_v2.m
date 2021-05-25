@@ -157,7 +157,7 @@ matching_elec=[];
 %Plot topo report
 temp_topo=squeeze(mean(mean(av_PowDataEO(match_str(group_PowDataEO,'Control'),2,matching_elec,TFdata.freq>4 & TFdata.freq<7),4),1));
 figure;
-simpleTopoPlot_ft(temp_topo', layout,'on',[],0,1);
+simpleTopoPlot_ft(temp_topo, layout,'on',[],0,1);
 colorbar;
 title('Topography on the [4 7]Hz frequency domain for Controls after the CTET task')
 caxis([-13 -5])
@@ -176,12 +176,14 @@ for nE=1:size(av_PowDataEO,3)
    temp_topo_pval(nE)=pV;
 end
 figure;
-simpleTopoPlot_ft(temp_topo_tval(matching_elec),layout,'on',[],0,1);
+simpleTopoPlot_ft(temp_topo_tval(matching_elec)',layout,'on',[],0,1);
 colormap(cmap_ttest);
 colorbar;
 title('Topography difference TF Power before CTET ADHD/Control (tvalue)')
 caxis([-1 1]*4)
-
+if ~isempty(find(temp_topo_pval(matching_elec)<0.05))
+ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval(matching_elec)<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+end
 
 
 temp_topo_tval=[];
@@ -194,12 +196,14 @@ for nE=1:size(av_PowDataEO,3)
    temp_topo_pval(nE)=pV;
 end
 figure;
-simpleTopoPlot_ft(temp_topo_tval(matching_elec),layout,'on',[],0,1);
+simpleTopoPlot_ft(temp_topo_tval(matching_elec)',layout,'on',[],0,1);
 colormap(cmap_ttest);
 colorbar;
 title('Topography difference TF Power after CTET ADHD/Control (tvalue)')
 caxis([-1 1]*4)
-
+if ~isempty(find(temp_topo_pval(matching_elec)<0.05))
+ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval(matching_elec)<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+end
 
 %% Plot interaction on Fz
 
@@ -208,9 +212,9 @@ datatoplot=[];
 for i = 1:2
     for j = 1:2
         if j==1
-        datatoplot{i, j} = squeeze(nanmean(av_PowDataEO(match_str(group_PowDataEO,'Control'),i,match_str(layout.label,'Fz'),TFdata.freq>4 & TFdata.freq<7),4));
+        datatoplot{i, j} = squeeze(nanmean(av_PowDataEO(match_str(group_PowDataEO,'Control'),i,match_str(TFdata.label,'Fz'),TFdata.freq>4 & TFdata.freq<7),4));
         else
-        datatoplot{i, j} = squeeze(nanmean(av_PowDataEO(match_str(group_PowDataEO,'ADHD'),i,match_str(layout.label,'Fz'),TFdata.freq>4 & TFdata.freq<7),4));
+        datatoplot{i, j} = squeeze(nanmean(av_PowDataEO(match_str(group_PowDataEO,'ADHD'),i,match_str(TFdata.label,'Fz'),TFdata.freq>4 & TFdata.freq<7),4));
         end
     end
 end
@@ -223,6 +227,46 @@ h   = rm_raincloud(datatoplot, Colors(1:2,:));
 % title(['Figure M9' newline 'Repeated measures raincloud plot']);
 % set(gca,'YTick',1:2,'YTickLabel',{'Before','After'});
 format_fig;
+
+temp_topo_Fval=[];
+temp_topo_pval=[];
+for nE=1:size(av_PowDataEO,3)
+    Theta_Before=squeeze(nanmean(av_PowDataEO(:,1,nE,TFdata.freq>4 & TFdata.freq<7),4));
+    Alpha_Before=squeeze(nanmean(av_PowDataEO(:,2,nE,TFdata.freq>4 & TFdata.freq<7),4));
+    
+    t = table(group_PowDataEO', Theta_Before,Alpha_Before,'VariableNames', {'Group', 't1', 't2'});
+    Time = [1 2]';
+    rm = fitrm( t, 't1-t2~Group', 'WithinDesign', Time);
+    ranovatbl = ranova(rm);
+    temp_topo_Fval(nE)=ranovatbl.F(2);
+    temp_topo_pval(nE)=ranovatbl.pValue(2);
+end
+ 
+figure;
+simpleTopoPlot_ft(temp_topo_Fval(matching_elec)',layout,'on',[],0,1);
+colormap(cmap_ttest);
+colorbar;
+title('Topography interaction Before/After ADHD/Control (Fvalue)')
+caxis([-1 1]*7)
+if ~isempty(find(temp_topo_pval(matching_elec)<0.05))
+ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval(matching_elec)<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+end
+
+%%
+% temp_byF_Fval=[];
+% temp_byF_pval=[];
+% for nF=1:size(av_PowDataEO,4)
+%     Theta_Before=squeeze(nanmean(av_PowDataEO(:,1,match_str(TFdata.label,'Oz'),nF),4));
+%     Alpha_Before=squeeze(nanmean(av_PowDataEO(:,2,match_str(TFdata.label,'Oz'),nF),4));
+%     
+%     t = table(group_PowDataEO', Theta_Before,Alpha_Before,'VariableNames', {'Group', 't1', 't2'});
+%     Time = [1 2]';
+%     rm = fitrm( t, 't1-t2~Group', 'WithinDesign', Time);
+%     ranovatbl = ranova(rm);
+%     temp_byF_Fval(nF)=ranovatbl.F(2);
+%     temp_byF_pval(nF)=ranovatbl.pValue(2);
+% end
+
 %% 1: Plot average power for Cz Oz and Fz
 % figure;
 % plot(TFdata.freq,squeeze(mean(av_PowDataEO(:,match_str(TFdata.label,'Fz'),:),1)))
