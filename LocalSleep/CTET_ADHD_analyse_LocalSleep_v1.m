@@ -14,7 +14,7 @@ cfg = [];
 cfg.layout = 'biosemi64.lay';
 layout=ft_prepare_layout(cfg);
 
-cfg = [];
+cfg = []
 cfg.layout = 'biosemi64.lay';
 cfg.channel = layout.label;
 cfg.channel(match_str(layout.label,{'Iz','P7','P8'}))=[];
