@@ -316,6 +316,28 @@ colorbar;
 title('Topography of average SW Downward slope for ADHDs')
 caxis([190 500])
 
+%T-VALUE SW SLOPE
+cmap_ttest=cbrewer('div','RdBu',64); % select a sequential colorscale from yellow to red (64)
+cmap_ttest=flipud(cmap_ttest);
+
+temp_topo_tval_DWS=[];
+temp_topo_pval_DWS=[];
+for nE=1:size(all_slowWaves_DWslope,3)
+    A=squeeze(nanmean(all_slowWaves_DWslope(match_str(group_SW,'Control'),:,nE),2));
+    B=squeeze(nanmean(all_slowWaves_DWslope(match_str(group_SW,'ADHD'),:,nE),2));
+   [h,pV,~,stat]=ttest2(B,A); 
+   temp_topo_tval_DWS(nE)=stat.tstat;
+   temp_topo_pval_DWS(nE)=pV;
+end
+figure;
+simpleTopoPlot_ft(temp_topo_tval_DWS,layout,'on',[],0,1);
+colormap(cmap_ttest);
+colorbar;
+title('Topography difference DW slope ADHD/Control (tvalue)')
+caxis([-1 1]*4)
+if ~isempty(find(temp_topo_pval_DWS<0.05))
+ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_DWS<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+end
 %%
 % Average Upward slope across blocks
 % all subjects
@@ -359,6 +381,29 @@ simpleTopoPlot_ft(SW_topo, layout,'on',[],0,1);
 colorbar;
 title('Topography of average SW Upward slope for ADHDs')
 caxis([190 500])
+
+%T-VALUE SW SLOPE
+cmap_ttest=cbrewer('div','RdBu',64); % select a sequential colorscale from yellow to red (64)
+cmap_ttest=flipud(cmap_ttest);
+
+temp_topo_tval_UWS=[];
+temp_topo_pval_UWS=[];
+for nE=1:size(all_slowWaves_UPWslope,3)
+    A=squeeze(nanmean(all_slowWaves_UPWslope(match_str(group_SW,'Control'),:,nE),2));
+    B=squeeze(nanmean(all_slowWaves_UPWslope(match_str(group_SW,'ADHD'),:,nE),2));
+   [h,pV,~,stat]=ttest2(B,A); 
+   temp_topo_tval_UWS(nE)=stat.tstat;
+   temp_topo_pval_UWS(nE)=pV;
+end
+figure;
+simpleTopoPlot_ft(temp_topo_tval_UWS,layout,'on',[],0,1);
+colormap(cmap_ttest);
+colorbar;
+title('Topography difference UW slope ADHD/Control (tvalue)')
+caxis([-1 1]*4)
+if ~isempty(find(temp_topo_pvalUDWS<0.05))
+ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_UWS<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+end
 
 %%
 % Repeated Measures ANOVA
