@@ -225,6 +225,7 @@ colorbar;
 title('Topography difference target/non target trials [1.1-1.8]s post-onset for ADHDs')
 caxis([-1 1]*5.2)
 
+%T-values topo
 cmap_ttest=cbrewer('div','RdBu',64); % select a sequential colorscale from yellow to red (64)
 cmap_ttest=flipud(cmap_ttest);
 
@@ -233,7 +234,7 @@ temp_topo_pval=[];
 for nE=1:size(diff_all_ERP,2)
     A=squeeze(mean(diff_all_ERP(match_str(group_PowDataEO,'Control'),nE,xTime>1.1 & xTime<1.8),3));
     B=squeeze(mean(diff_all_ERP(match_str(group_PowDataEO,'ADHD'),nE,xTime>1.1 & xTime<1.8),3));
-   [h,pV,~,stat]=ttest2(A,B); 
+   [h,pV,~,stat]=ttest2(B,A); 
    temp_topo_tval(nE)=stat.tstat;
    temp_topo_pval(nE)=pV;
 end
@@ -243,6 +244,9 @@ colormap(cmap_ttest);
 colorbar;
 title('Topography difference target/non target trials [1.1-1.8]s post-onset (tvalue)')
 caxis([-1 1]*4)
+if ~isempty(find(temp_topo_pval(matching_elec)<0.05))
+ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval(matching_elec)<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+end
 %%
 %%% Plot topography [0.3-0.8]s post-offset
 %Non-target trials offset-locked

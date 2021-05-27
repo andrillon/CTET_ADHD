@@ -183,6 +183,9 @@ colormap(cmap_ttest);
 colorbar;
 title('Topography difference SW density ADHD/Control (tvalue)')
 caxis([-1 1]*4)
+if ~isempty(find(temp_topo_pval<0.05))
+ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+end
 
 %% 
 % Average P2P amplitude across blocks at Cz
@@ -266,7 +269,9 @@ colormap(cmap_ttest);
 colorbar;
 title('Topography difference SW amplitude ADHD/Control (tvalue)')
 caxis([-1 1]*4)
-%caxis([-1 1]*4)
+if ~isempty(find(temp_topo_pval_P2P<0.05))
+ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_P2P<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+end
 %%
 % Average Downward slope across blocks
 % all subjects
