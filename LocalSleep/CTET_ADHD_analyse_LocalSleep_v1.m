@@ -27,6 +27,8 @@ all_slowWaves=[];
 nFc=0;
 nFc4=0;
 group_SW=[];
+table_SWandBehav=[];
+table_P2PandBehav=[];
 for nF=1:length(files)
     file_name = files(nF).name;
     folder_name = files(nF).folder;
@@ -58,6 +60,8 @@ for nF=1:length(files)
     % 12: Downward Slope
     % 13: Upward Slope
     nFc=nFc+1;
+    temp_SWandBehav=[];
+    temp_P2PandBehav=[];
     for nBl=1:8
         these_SWelectrodes=slow_Waves(slow_Waves(:,2)==nBl,3);
         nout=hist(these_SWelectrodes,1:64);
@@ -68,6 +72,8 @@ for nF=1:length(files)
         densSW=nout/duration_block;
         all_slowWaves(nFc,nBl,:)=densSW;
         
+       temp_SWandBehav=[temp_SWandBehav ; [nFc nBl nanmean(table_behav.corrTG(table_behav.BlockN==nBl & table_behav.StimType==1))  nanmean(table_behav.corrNT(table_behav.BlockN==nBl & table_behav.StimType==0))  nanmean(table_behav.RT(table_behav.BlockN==nBl  & table_behav.StimType==1)) ...
+           densSW nanmean(densSW)]];
         these_Amplitude=slow_Waves(slow_Waves(:,2)==nBl,4);
         byElec_Amplitude=nan(1,64);
         for nE=1:64
@@ -75,6 +81,9 @@ for nF=1:length(files)
         end
          all_slowWaves_P2P(nFc,nBl,:)=byElec_Amplitude(matching_elec);
          
+         temp_P2PandBehav=[temp_P2PandBehav ; [nFc nBl nanmean(table_behav.corrTG(table_behav.BlockN==nBl & table_behav.StimType==1))  nanmean(table_behav.corrNT(table_behav.BlockN==nBl & table_behav.StimType==0))  nanmean(table_behav.RT(table_behav.BlockN==nBl  & table_behav.StimType==1)) ...
+           byElec_Amplitude(matching_elec) nanmean(byElec_Amplitude(matching_elec))]];
+       
         these_DWslope=slow_Waves(slow_Waves(:,2)==nBl,12);
         byElec_Amplitude=nan(1,64);
         for nE=1:64
@@ -88,8 +97,11 @@ for nF=1:length(files)
             byElec_Amplitude(nE)=mean(these_UPWslope(these_SWelectrodes==nE));
         end
          all_slowWaves_UPWslope(nFc,nBl,:)=byElec_Amplitude(matching_elec);
-   end
+    end
     
+    table_SWandBehav=[table_SWandBehav ; mean(temp_SWandBehav,1)];
+    table_P2PandBehav=[table_P2PandBehav ; mean(temp_P2PandBehav,1)];
+       
     orifoldername=files(nF).folder;
     if isempty(findstr(orifoldername,'controls'))==0
         group_SW{nFc}='Control';
@@ -412,3 +424,36 @@ t = table(group_SW,all_slowWaves(:,1,:),all_slowWaves(:,2,:),all_slowWaves(:,3,:
 Time = [1 2 3 4 5 6 7 8]';
 rm = fitrm(t,'B1-B8 ~ Group','WithinDesign',Time,'WithinModel','orthogonalcontrasts')
 ranovatbl = ranova(rm)
+
+%%
+figure;
+subplot(1,3,1);
+simpleCorPlot(table_SWandBehav(:,end),1-table_SWandBehav(:,3),{'o','b','b',72},'Spearman');
+title('Miss');
+
+
+subplot(1,3,2);
+simpleCorPlot(table_SWandBehav(:,end),1-table_SWandBehav(:,4),{'o','b','b',72},'Spearman');
+title('FA')
+
+subplot(1,3,3);
+simpleCorPlot(table_SWandBehav(:,end),table_SWandBehav(:,5),{'o','b','b',72},'Spearman');
+title('RT')
+
+%%
+temp_topo_rval_Miss=[];
+temp_topo_pval_P2P=[];
+for nE=1:size(all_slowWaves_P2P,3)
+    [r pV]=corr(table_SWandBehav(:,5+nE),1-table_SWandBehav(:,3),'rows','pairwise','type','Spearman');
+    temp_topo_rval_Miss(nE)=r;
+    temp_topo_pval_Miss(nE)=pV;
+end
+figure;
+simpleTopoPlot_ft(temp_topo_rval_Miss,layout,'on',[],0,1);
+colormap(cmap_ttest);
+colorbar;
+title('Topography ###')
+caxis([-1 1]*1)
+if ~isempty(find(temp_topo_pval_Miss<0.05))
+    ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_Miss<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+end
