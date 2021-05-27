@@ -428,23 +428,23 @@ ranovatbl = ranova(rm)
 %%
 figure;
 subplot(1,3,1);
-simpleCorPlot(table_SWandBehav(:,end),1-table_SWandBehav(:,3),{'o','b','b',72},'Spearman');
+simpleCorPlot(table_P2PandBehav(:,end),1-table_P2PandBehav(:,3),{'o','b','b',72},'Spearman');
 title('Miss');
 
 
 subplot(1,3,2);
-simpleCorPlot(table_SWandBehav(:,end),1-table_SWandBehav(:,4),{'o','b','b',72},'Spearman');
+simpleCorPlot(table_P2PandBehav(:,end),1-table_P2PandBehav(:,4),{'o','b','b',72},'Spearman');
 title('FA')
 
 subplot(1,3,3);
-simpleCorPlot(table_SWandBehav(:,end),table_SWandBehav(:,5),{'o','b','b',72},'Spearman');
+simpleCorPlot(table_P2PandBehav(:,end),table_P2PandBehav(:,5),{'o','b','b',72},'Spearman');
 title('RT')
 
 %%
 temp_topo_rval_Miss=[];
 temp_topo_pval_P2P=[];
 for nE=1:size(all_slowWaves_P2P,3)
-    [r pV]=corr(table_SWandBehav(:,5+nE),1-table_SWandBehav(:,3),'rows','pairwise','type','Spearman');
+    [r pV]=corr(table_P2PandBehav(:,5+nE),1-table_P2PandBehav(:,3),'rows','pairwise','type','Spearman');
     temp_topo_rval_Miss(nE)=r;
     temp_topo_pval_Miss(nE)=pV;
 end
