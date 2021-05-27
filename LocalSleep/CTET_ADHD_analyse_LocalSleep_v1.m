@@ -413,7 +413,7 @@ colormap(cmap_ttest);
 colorbar;
 title('Topography difference UW slope ADHD/Control (tvalue)')
 caxis([-1 1]*4)
-if ~isempty(find(temp_topo_pvalUDWS<0.05))
+if ~isempty(find(temp_topo_pvalUWS<0.05))
 ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_UWS<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
 end
 
@@ -425,35 +425,146 @@ Time = [1 2 3 4 5 6 7 8]';
 rm = fitrm(t,'B1-B8 ~ Group','WithinDesign',Time,'WithinModel','orthogonalcontrasts')
 ranovatbl = ranova(rm)
 
-%%
+%% P2P Amplitude and behav
+Colors2=[247,104,161;
+    212,185,218;
+    251,128,114;
+    255,255,179]/256;
+
 figure;
 subplot(1,3,1);
-simpleCorPlot(table_P2PandBehav(:,end),1-table_P2PandBehav(:,3),{'o','b','b',72},'Spearman');
-title('Miss');
+simpleCorPlot(table_P2PandBehav(:,end),1-table_P2PandBehav(:,3),{'o',Colors2(2,:),Colors2(2,:),50},'Spearman');
+title('Correlation Miss/SW P2P');
 
 
 subplot(1,3,2);
-simpleCorPlot(table_P2PandBehav(:,end),1-table_P2PandBehav(:,4),{'o','b','b',72},'Spearman');
-title('FA')
+simpleCorPlot(table_P2PandBehav(:,end),1-table_P2PandBehav(:,4),{'o',Colors2(1,:),Colors2(1,:),50},'Spearman');
+title('Correlation FA/SW P2P')
 
 subplot(1,3,3);
-simpleCorPlot(table_P2PandBehav(:,end),table_P2PandBehav(:,5),{'o','b','b',72},'Spearman');
-title('RT')
+simpleCorPlot(table_P2PandBehav(:,end),table_P2PandBehav(:,5),{'o',Colors2(3,:),Colors2(3,:),50},'Spearman');
+title('Correlation RT/SW P2P')
 
-%%
-temp_topo_rval_Miss=[];
-temp_topo_pval_P2P=[];
+%% Topo correlation P2P amplitude and behav
+%Miss
+temp_topo_rval_P2PMiss=[];
+temp_topo_pval_P2PMiss=[];
 for nE=1:size(all_slowWaves_P2P,3)
     [r pV]=corr(table_P2PandBehav(:,5+nE),1-table_P2PandBehav(:,3),'rows','pairwise','type','Spearman');
-    temp_topo_rval_Miss(nE)=r;
-    temp_topo_pval_Miss(nE)=pV;
+    temp_topo_rval_P2PMiss(nE)=r;
+    temp_topo_pval_P2PMiss(nE)=pV;
 end
 figure;
-simpleTopoPlot_ft(temp_topo_rval_Miss,layout,'on',[],0,1);
+simpleTopoPlot_ft(temp_topo_rval_P2PMiss,layout,'on',[],0,1);
 colormap(cmap_ttest);
 colorbar;
-title('Topography ###')
+title('Topography Correlation coeff Miss/SW P2P')
 caxis([-1 1]*1)
-if ~isempty(find(temp_topo_pval_Miss<0.05))
-    ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_Miss<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+if ~isempty(find(temp_topo_pval_P2PMiss<0.05))
+    ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_P2PMiss<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+end
+
+%FA
+temp_topo_rval_P2PFA=[];
+temp_topo_pval_P2PFA=[];
+for nE=1:size(all_slowWaves_P2P,3)
+    [r pV]=corr(table_P2PandBehav(:,5+nE),1-table_P2PandBehav(:,4),'rows','pairwise','type','Spearman');
+    temp_topo_rval_P2PFA(nE)=r;
+    temp_topo_pval_P2PFA(nE)=pV;
+end
+figure;
+simpleTopoPlot_ft(temp_topo_rval_P2PFA,layout,'on',[],0,1);
+colormap(cmap_ttest);
+colorbar;
+title('Topography Correlation coeff FA/SW P2P')
+caxis([-1 1]*1)
+if ~isempty(find(temp_topo_pval_P2PFA<0.05))
+    ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_P2PFA<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+end
+
+%RT
+temp_topo_rval_P2PRT=[];
+temp_topo_pval_P2PRT=[];
+for nE=1:size(all_slowWaves_P2P,3)
+    [r pV]=corr(table_P2PandBehav(:,5+nE),table_P2PandBehav(:,5),'rows','pairwise','type','Spearman');
+    temp_topo_rval_P2PRT(nE)=r;
+    temp_topo_pval_P2PRT(nE)=pV;
+end
+figure;
+simpleTopoPlot_ft(temp_topo_rval_P2PRT,layout,'on',[],0,1);
+colormap(cmap_ttest);
+colorbar;
+title('Topography Correlation coeff RT/SW P2P')
+caxis([-1 1]*1)
+if ~isempty(find(temp_topo_pval_P2PRT<0.05))
+    ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_P2PRT<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+end
+%% SW density and behav
+figure;
+subplot(1,3,1);
+simpleCorPlot(table_SWandBehav(:,end),1-table_SWandBehav(:,3),{'o',Colors2(2,:),Colors2(2,:),50},'Spearman');
+title('Correlation Miss/SW density');
+
+
+subplot(1,3,2);
+simpleCorPlot(table_SWandBehav(:,end),1-table_SWandBehav(:,4),{'o',Colors2(1,:),Colors2(1,:),50},'Spearman');
+title('Correlation FA/SW density')
+
+subplot(1,3,3);
+simpleCorPlot(table_SWandBehav(:,end),table_SWandBehav(:,5),{'o',Colors2(3,:),Colors2(3,:),50},'Spearman');
+title('Correlation RT/SW density')
+
+%% Topo correlation SW density and behav
+%Miss
+temp_topo_rval_DMiss=[];
+temp_topo_pval_DMiss=[];
+for nE=1:size(all_slowWaves,3)
+    [r pV]=corr(table_SWandBehav(:,5+nE),1-table_SWandBehav(:,3),'rows','pairwise','type','Spearman');
+    temp_topo_rval_DMiss(nE)=r;
+    temp_topo_pval_DMiss(nE)=pV;
+end
+figure;
+simpleTopoPlot_ft(temp_topo_rval_DMiss,layout,'on',[],0,1);
+colormap(cmap_ttest);
+colorbar;
+title('Topography Correlation coeff Miss/SW Density')
+caxis([-1 1]*1)
+if ~isempty(find(temp_topo_pval_DMiss<0.05))
+    ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_DMiss<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+end
+
+%FA
+temp_topo_rval_DFA=[];
+temp_topo_pval_DFA=[];
+for nE=1:size(all_slowWaves,3)
+    [r pV]=corr(table_SWandBehav(:,5+nE),1-table_SWandBehav(:,4),'rows','pairwise','type','Spearman');
+    temp_topo_rval_DFA(nE)=r;
+    temp_topo_pval_DFA(nE)=pV;
+end
+figure;
+simpleTopoPlot_ft(temp_topo_rval_DFA,layout,'on',[],0,1);
+colormap(cmap_ttest);
+colorbar;
+title('Topography Correlation coeff FA/SW Density')
+caxis([-1 1]*1)
+if ~isempty(find(temp_topo_pval_DFA<0.05))
+    ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_DFA<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+end
+
+%RT
+temp_topo_rval_DRT=[];
+temp_topo_pval_DRT=[];
+for nE=1:size(all_slowWaves,3)
+    [r pV]=corr(table_SWandBehav(:,5+nE),table_SWandBehav(:,5),'rows','pairwise','type','Spearman');
+    temp_topo_rval_DRT(nE)=r;
+    temp_topo_pval_DRT(nE)=pV;
+end
+figure;
+simpleTopoPlot_ft(temp_topo_rval_DRT,layout,'on',[],0,1);
+colormap(cmap_ttest);
+colorbar;
+title('Topography Correlation coeff RT/SW Density')
+caxis([-1 1]*1)
+if ~isempty(find(temp_topo_pval_DRT<0.05))
+    ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_DRT<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
 end
