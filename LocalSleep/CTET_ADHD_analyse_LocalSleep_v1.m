@@ -445,6 +445,9 @@ subplot(1,3,3);
 simpleCorPlot(table_P2PandBehav(:,end),table_P2PandBehav(:,5),{'o',Colors2(3,:),Colors2(3,:),50},'Spearman');
 title('Correlation RT/SW P2P')
 
+myFigPos=[182         369        1150         428]
+set(gcf,'Position',myFigPos);
+
 %% Topo correlation P2P amplitude and behav
 %Miss
 temp_topo_rval_P2PMiss=[];
@@ -514,6 +517,8 @@ subplot(1,3,3);
 simpleCorPlot(table_SWandBehav(:,end),table_SWandBehav(:,5),{'o',Colors2(3,:),Colors2(3,:),50},'Spearman');
 title('Correlation RT/SW density')
 
+myFigPos=[182         369        1150         428]
+set(gcf,'Position',myFigPos);
 %% Topo correlation SW density and behav
 %Miss
 temp_topo_rval_DMiss=[];

@@ -28,6 +28,7 @@ nFc=0;
 nFc4=0;
 group_SW=[];
 table_SWandBehav=[];
+table_P2PandBehav=[];
 for nF=1:length(files)
     file_name = files(nF).name;
     folder_name = files(nF).folder;
@@ -60,6 +61,7 @@ for nF=1:length(files)
     % 13: Upward Slope
     nFc=nFc+1;
     temp_SWandBehav=[];
+    temp_P2PandBehav=[];
     for nBl=1:8
         these_SWelectrodes=slow_Waves(slow_Waves(:,2)==nBl,3);
         nout=hist(these_SWelectrodes,1:64);
@@ -79,6 +81,9 @@ for nF=1:length(files)
         end
          all_slowWaves_P2P(nFc,nBl,:)=byElec_Amplitude(matching_elec);
          
+         temp_P2PandBehav=[temp_P2PandBehav ; [nFc nBl nanmean(table_behav.corrTG(table_behav.BlockN==nBl & table_behav.StimType==1))  nanmean(table_behav.corrNT(table_behav.BlockN==nBl & table_behav.StimType==0))  nanmean(table_behav.RT(table_behav.BlockN==nBl  & table_behav.StimType==1)) ...
+           byElec_Amplitude(matching_elec) nanmean(byElec_Amplitude(matching_elec))]];
+       
         these_DWslope=slow_Waves(slow_Waves(:,2)==nBl,12);
         byElec_Amplitude=nan(1,64);
         for nE=1:64
@@ -95,6 +100,7 @@ for nF=1:length(files)
     end
     
     table_SWandBehav=[table_SWandBehav ; mean(temp_SWandBehav,1)];
+    table_P2PandBehav=[table_P2PandBehav ; mean(temp_P2PandBehav,1)];
        
     orifoldername=files(nF).folder;
     if isempty(findstr(orifoldername,'controls'))==0
@@ -326,23 +332,23 @@ caxis([190 500])
 cmap_ttest=cbrewer('div','RdBu',64); % select a sequential colorscale from yellow to red (64)
 cmap_ttest=flipud(cmap_ttest);
 
-temp_topo_tval_DW=[];
-temp_topo_pval_P2P=[];
+temp_topo_tval_DWS=[];
+temp_topo_pval_DWS=[];
 for nE=1:size(all_slowWaves_DWslope,3)
     A=squeeze(nanmean(all_slowWaves_DWslope(match_str(group_SW,'Control'),:,nE),2));
     B=squeeze(nanmean(all_slowWaves_DWslope(match_str(group_SW,'ADHD'),:,nE),2));
    [h,pV,~,stat]=ttest2(B,A); 
-   temp_topo_tval_P2P(nE)=stat.tstat;
-   temp_topo_pval_P2P(nE)=pV;
+   temp_topo_tval_DWS(nE)=stat.tstat;
+   temp_topo_pval_DWS(nE)=pV;
 end
 figure;
-simpleTopoPlot_ft(temp_topo_tval_P2P,layout,'on',[],0,1);
+simpleTopoPlot_ft(temp_topo_tval_DWS,layout,'on',[],0,1);
 colormap(cmap_ttest);
 colorbar;
-title('Topography difference SW amplitude ADHD/Control (tvalue)')
+title('Topography difference DW slope ADHD/Control (tvalue)')
 caxis([-1 1]*4)
-if ~isempty(find(temp_topo_pval_P2P<0.05))
-ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_P2P<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+if ~isempty(find(temp_topo_pval_DWS<0.05))
+ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_DWS<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
 end
 %%
 % Average Upward slope across blocks
@@ -388,6 +394,29 @@ colorbar;
 title('Topography of average SW Upward slope for ADHDs')
 caxis([190 500])
 
+%T-VALUE SW SLOPE
+cmap_ttest=cbrewer('div','RdBu',64); % select a sequential colorscale from yellow to red (64)
+cmap_ttest=flipud(cmap_ttest);
+
+temp_topo_tval_UWS=[];
+temp_topo_pval_UWS=[];
+for nE=1:size(all_slowWaves_UPWslope,3)
+    A=squeeze(nanmean(all_slowWaves_UPWslope(match_str(group_SW,'Control'),:,nE),2));
+    B=squeeze(nanmean(all_slowWaves_UPWslope(match_str(group_SW,'ADHD'),:,nE),2));
+   [h,pV,~,stat]=ttest2(B,A); 
+   temp_topo_tval_UWS(nE)=stat.tstat;
+   temp_topo_pval_UWS(nE)=pV;
+end
+figure;
+simpleTopoPlot_ft(temp_topo_tval_UWS,layout,'on',[],0,1);
+colormap(cmap_ttest);
+colorbar;
+title('Topography difference UW slope ADHD/Control (tvalue)')
+caxis([-1 1]*4)
+if ~isempty(find(temp_topo_pvalUWS<0.05))
+ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_UWS<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+end
+
 %%
 % Repeated Measures ANOVA
 t = table(group_SW,all_slowWaves(:,1,:),all_slowWaves(:,2,:),all_slowWaves(:,3,:),all_slowWaves(:,4,:),all_slowWaves(:,5,:),all_slowWaves(:,6,:),all_slowWaves(:,7,:),all_slowWaves(:,8,:),...
@@ -396,32 +425,148 @@ Time = [1 2 3 4 5 6 7 8]';
 rm = fitrm(t,'B1-B8 ~ Group','WithinDesign',Time,'WithinModel','orthogonalcontrasts')
 ranovatbl = ranova(rm)
 
-%%
+%% P2P Amplitude and behav
+Colors2=[247,104,161;
+    212,185,218;
+    251,128,114;
+    255,255,179]/256;
+
 figure;
-subplot(1,2,1);
-simpleCorPlot(table_SWandBehav(:,end),1-table_SWandBehav(:,3),{'o','b','b',72});
-title('Miss');
+subplot(1,3,1);
+simpleCorPlot(table_P2PandBehav(:,end),1-table_P2PandBehav(:,3),{'o',Colors2(2,:),Colors2(2,:),50},'Spearman');
+title('Correlation Miss/SW P2P');
 
 
-subplot(1,2,2);
-simpleCorPlot(table_SWandBehav(:,end),1-table_SWandBehav(:,4),{'o','b','b',72});
-title('Miss')
+subplot(1,3,2);
+simpleCorPlot(table_P2PandBehav(:,end),1-table_P2PandBehav(:,4),{'o',Colors2(1,:),Colors2(1,:),50},'Spearman');
+title('Correlation FA/SW P2P')
 
+subplot(1,3,3);
+simpleCorPlot(table_P2PandBehav(:,end),table_P2PandBehav(:,5),{'o',Colors2(3,:),Colors2(3,:),50},'Spearman');
+title('Correlation RT/SW P2P')
 
-%%
-temp_topo_rval_Miss=[];
-temp_topo_pval_P2P=[];
+get(gcf,'Position');
+
+%% Topo correlation P2P amplitude and behav
+%Miss
+temp_topo_rval_P2PMiss=[];
+temp_topo_pval_P2PMiss=[];
 for nE=1:size(all_slowWaves_P2P,3)
-    [r pV]=corr(table_SWandBehav(:,4+nE),1-table_SWandBehav(:,4));
-   temp_topo_rval_Miss(nE)=r;
-   temp_topo_pval_Miss(nE)=pV;
+    [r pV]=corr(table_P2PandBehav(:,5+nE),1-table_P2PandBehav(:,3),'rows','pairwise','type','Spearman');
+    temp_topo_rval_P2PMiss(nE)=r;
+    temp_topo_pval_P2PMiss(nE)=pV;
 end
 figure;
-simpleTopoPlot_ft(temp_topo_rval_Miss,layout,'on',[],0,1);
+simpleTopoPlot_ft(temp_topo_rval_P2PMiss,layout,'on',[],0,1);
 colormap(cmap_ttest);
 colorbar;
-title('Topography difference SW amplitude ADHD/Control (tvalue)')
-caxis([-1 1]*4)
-if ~isempty(find(temp_topo_pval_P2P<0.05))
-ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_P2P<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+title('Topography Correlation coeff Miss/SW P2P')
+caxis([-1 1]*1)
+if ~isempty(find(temp_topo_pval_P2PMiss<0.05))
+    ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_P2PMiss<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+end
+
+%FA
+temp_topo_rval_P2PFA=[];
+temp_topo_pval_P2PFA=[];
+for nE=1:size(all_slowWaves_P2P,3)
+    [r pV]=corr(table_P2PandBehav(:,5+nE),1-table_P2PandBehav(:,4),'rows','pairwise','type','Spearman');
+    temp_topo_rval_P2PFA(nE)=r;
+    temp_topo_pval_P2PFA(nE)=pV;
+end
+figure;
+simpleTopoPlot_ft(temp_topo_rval_P2PFA,layout,'on',[],0,1);
+colormap(cmap_ttest);
+colorbar;
+title('Topography Correlation coeff FA/SW P2P')
+caxis([-1 1]*1)
+if ~isempty(find(temp_topo_pval_P2PFA<0.05))
+    ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_P2PFA<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+end
+
+%RT
+temp_topo_rval_P2PRT=[];
+temp_topo_pval_P2PRT=[];
+for nE=1:size(all_slowWaves_P2P,3)
+    [r pV]=corr(table_P2PandBehav(:,5+nE),table_P2PandBehav(:,5),'rows','pairwise','type','Spearman');
+    temp_topo_rval_P2PRT(nE)=r;
+    temp_topo_pval_P2PRT(nE)=pV;
+end
+figure;
+simpleTopoPlot_ft(temp_topo_rval_P2PRT,layout,'on',[],0,1);
+colormap(cmap_ttest);
+colorbar;
+title('Topography Correlation coeff RT/SW P2P')
+caxis([-1 1]*1)
+if ~isempty(find(temp_topo_pval_P2PRT<0.05))
+    ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_P2PRT<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+end
+%% SW density and behav
+figure;
+subplot(1,3,1);
+simpleCorPlot(table_SWandBehav(:,end),1-table_SWandBehav(:,3),{'o',Colors2(2,:),Colors2(2,:),50},'Spearman');
+title('Correlation Miss/SW density');
+
+
+subplot(1,3,2);
+simpleCorPlot(table_SWandBehav(:,end),1-table_SWandBehav(:,4),{'o',Colors2(1,:),Colors2(1,:),50},'Spearman');
+title('Correlation FA/SW density')
+
+subplot(1,3,3);
+simpleCorPlot(table_SWandBehav(:,end),table_SWandBehav(:,5),{'o',Colors2(3,:),Colors2(3,:),50},'Spearman');
+title('Correlation RT/SW density')
+
+%% Topo correlation SW density and behav
+%Miss
+temp_topo_rval_DMiss=[];
+temp_topo_pval_DMiss=[];
+for nE=1:size(all_slowWaves,3)
+    [r pV]=corr(table_SWandBehav(:,5+nE),1-table_SWandBehav(:,3),'rows','pairwise','type','Spearman');
+    temp_topo_rval_DMiss(nE)=r;
+    temp_topo_pval_DMiss(nE)=pV;
+end
+figure;
+simpleTopoPlot_ft(temp_topo_rval_DMiss,layout,'on',[],0,1);
+colormap(cmap_ttest);
+colorbar;
+title('Topography Correlation coeff Miss/SW Density')
+caxis([-1 1]*1)
+if ~isempty(find(temp_topo_pval_DMiss<0.05))
+    ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_DMiss<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+end
+
+%FA
+temp_topo_rval_DFA=[];
+temp_topo_pval_DFA=[];
+for nE=1:size(all_slowWaves,3)
+    [r pV]=corr(table_SWandBehav(:,5+nE),1-table_SWandBehav(:,4),'rows','pairwise','type','Spearman');
+    temp_topo_rval_DFA(nE)=r;
+    temp_topo_pval_DFA(nE)=pV;
+end
+figure;
+simpleTopoPlot_ft(temp_topo_rval_DFA,layout,'on',[],0,1);
+colormap(cmap_ttest);
+colorbar;
+title('Topography Correlation coeff FA/SW Density')
+caxis([-1 1]*1)
+if ~isempty(find(temp_topo_pval_DFA<0.05))
+    ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_DFA<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
+end
+
+%RT
+temp_topo_rval_DRT=[];
+temp_topo_pval_DRT=[];
+for nE=1:size(all_slowWaves,3)
+    [r pV]=corr(table_SWandBehav(:,5+nE),table_SWandBehav(:,5),'rows','pairwise','type','Spearman');
+    temp_topo_rval_DRT(nE)=r;
+    temp_topo_pval_DRT(nE)=pV;
+end
+figure;
+simpleTopoPlot_ft(temp_topo_rval_DRT,layout,'on',[],0,1);
+colormap(cmap_ttest);
+colorbar;
+title('Topography Correlation coeff RT/SW Density')
+caxis([-1 1]*1)
+if ~isempty(find(temp_topo_pval_DRT<0.05))
+    ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval_DRT<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
 end
