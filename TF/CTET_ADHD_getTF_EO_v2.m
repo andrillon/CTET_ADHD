@@ -256,7 +256,7 @@ for nE=1:size(av_PowDataEO,3)
     temp_topo_Fval(nE)=ranovatbl.F(2);
     temp_topo_pval(nE)=ranovatbl.pValue(2);
 end
- 
+
 figure;
 simpleTopoPlot_ft(temp_topo_Fval(matching_elec)',layout,'on',[],0,1);
 colormap(cmap_ttest);

@@ -64,11 +64,8 @@ for nF=1:length(files)
              orifile=dir([data_path filesep '*' filesep  '*' filesep SubIDlong '.bdf']);
    load([data_path filesep 'Preproc' filesep 'TF_' file_name(1:end-4)]);
     end
-    av_DurationEO(nFc,1) =TFdata.time(end)-1;
-    av_DurationEO(nFc,2) =NaN;
     
     av_PowDataEO(nFc,1,:,:) = squeeze(10*log10(nanmean(TFdata.powspctrm,4)));
-    av_PowDataEO(nFc,2,:,:) = nan;
     
     temp_Power=squeeze((nanmean(TFdata.powspctrm,4)));
     %temp_fooof=[];
@@ -136,8 +133,7 @@ tic;
     end
     
     av_PowDataEO(thisF,2,:,:) = squeeze(10*log10(nanmean(TFdata.powspctrm,4)));
-     av_DurationEO(thisF,2) =TFdata.time(end)-1;
-
+ 
 end
 
 %% Matching electrodes
@@ -159,7 +155,7 @@ matching_elec=[];
     end
 
 %Plot topo report
-temp_topo=squeeze(nanmean(nanmean(av_PowDataEO(match_str(group_PowDataEO,'Control'),2,matching_elec,TFdata.freq>4 & TFdata.freq<7),4),1));
+temp_topo=squeeze(mean(mean(av_PowDataEO(match_str(group_PowDataEO,'Control'),2,matching_elec,TFdata.freq>4 & TFdata.freq<7),4),1));
 figure;
 simpleTopoPlot_ft(temp_topo, layout,'on',[],0,1);
 colorbar;
@@ -219,11 +215,9 @@ datatoplot=[];
 for i = 1:2
     for j = 1:2
         if j==1
-            temp=squeeze(nanmean(av_PowDataEO(match_str(group_PowDataEO,'Control'),i,match_str(TFdata.label,'Fz'),TFdata.freq>4 & TFdata.freq<7),4));
-        datatoplot{i, j} = temp(~isnan(temp));
+        datatoplot{i, j} = squeeze(nanmean(av_PowDataEO(match_str(group_PowDataEO,'Control'),i,match_str(TFdata.label,'Fz'),TFdata.freq>4 & TFdata.freq<7),4));
         else
-                    temp=squeeze(nanmean(av_PowDataEO(match_str(group_PowDataEO,'ADHD'),i,match_str(TFdata.label,'Fz'),TFdata.freq>4 & TFdata.freq<7),4));
-datatoplot{i, j} =  temp(~isnan(temp));
+        datatoplot{i, j} = squeeze(nanmean(av_PowDataEO(match_str(group_PowDataEO,'ADHD'),i,match_str(TFdata.label,'Fz'),TFdata.freq>4 & TFdata.freq<7),4));
         end
     end
 end
@@ -236,33 +230,40 @@ h   = rm_raincloud(datatoplot, Colors(1:2,:));
 % title(['Figure M9' newline 'Repeated measures raincloud plot']);
 % set(gca,'YTick',1:2,'YTickLabel',{'Before','After'});
 format_fig;
-Theta_Before=squeeze(nanmean(av_PowDataEO(:,1,match_str(TFdata.label,'Fz'),TFdata.freq>4 & TFdata.freq<7),4));
-Theta_After=squeeze(nanmean(av_PowDataEO(:,2,match_str(TFdata.label,'Fz'),TFdata.freq>4 & TFdata.freq<7),4));
-t = table(group_PowDataEO((~isnan(Theta_After)))', Theta_Before(~isnan(Theta_After)),Theta_After(~isnan(Theta_After)),'VariableNames', {'Group', 't1', 't2'});
-Time = [1 2]';
-rm = fitrm( t, 't1-t2~Group', 'WithinDesign', Time);
-fprintf('rmANOVA for Fz: F=%1.5f p=%1.5f\n',ranovatbl.F(2),ranovatbl.pValue(2))
 
 temp_topo_Fval=[];
 temp_topo_pval=[];
 for nE=1:size(av_PowDataEO,3)
     Theta_Before=squeeze(nanmean(av_PowDataEO(:,1,nE,TFdata.freq>4 & TFdata.freq<7),4));
-    Theta_After=squeeze(nanmean(av_PowDataEO(:,2,nE,TFdata.freq>4 & TFdata.freq<7),4));
+    Alpha_Before=squeeze(nanmean(av_PowDataEO(:,2,nE,TFdata.freq>4 & TFdata.freq<7),4));
     
-    t = table(group_PowDataEO((~isnan(Theta_After)))', Theta_Before(~isnan(Theta_After)),Theta_After(~isnan(Theta_After)),'VariableNames', {'Group', 't1', 't2'});
+    t = table(group_PowDataEO', Theta_Before,Alpha_Before,'VariableNames', {'Group', 't1', 't2'});
     Time = [1 2]';
     rm = fitrm( t, 't1-t2~Group', 'WithinDesign', Time);
     ranovatbl = ranova(rm);
     temp_topo_Fval(nE)=ranovatbl.F(2);
     temp_topo_pval(nE)=ranovatbl.pValue(2);
 end
+
+temp_topo_Fval=[];
+temp_topo_pval=[];
+Theta_Before=squeeze(nanmean(av_PowDataEO(:,1,nE,TFdata.freq>4 & TFdata.freq<7),4));
+Alpha_Before=squeeze(nanmean(av_PowDataEO(:,2,nE,TFdata.freq>4 & TFdata.freq<7),4));
+    
+    t = table(group_PowDataEO', Theta_Before,Alpha_Before,'VariableNames', {'Group', 't1', 't2'});
+    Time = [1 2]';
+    rm = fitrm( t, 't1-t2~Group', 'WithinDesign', Time);
+    ranovatbl = ranova(rm);
+    temp_topo_Fval(nE)=ranovatbl.F(2);
+    temp_topo_pval(nE)=ranovatbl.pValue(2);
+
  
 figure;
 simpleTopoPlot_ft(temp_topo_Fval(matching_elec)',layout,'on',[],0,1);
 colormap(cmap_ttest);
 colorbar;
 title('Topography interaction Before/After ADHD/Control (Fvalue)')
-caxis([-1 1]*14)
+caxis([-1 1]*7)
 if ~isempty(find(temp_topo_pval(matching_elec)<0.05))
 ft_plot_lay_me(layout, 'chanindx',find(temp_topo_pval(matching_elec)<0.05),'pointsymbol','o','pointcolor','k','pointsize',64,'box','no','label','no')
 end
