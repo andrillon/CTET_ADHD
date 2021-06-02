@@ -245,6 +245,19 @@ for nE=1:size(av_PowDataEO,3)
     temp_topo_pval(nE)=ranovatbl.pValue(2);
 end
 
+temp_topo_Fval=[];
+temp_topo_pval=[];
+Theta_Before=squeeze(nanmean(av_PowDataEO(:,1,nE,TFdata.freq>4 & TFdata.freq<7),4));
+Alpha_Before=squeeze(nanmean(av_PowDataEO(:,2,nE,TFdata.freq>4 & TFdata.freq<7),4));
+    
+    t = table(group_PowDataEO', Theta_Before,Alpha_Before,'VariableNames', {'Group', 't1', 't2'});
+    Time = [1 2]';
+    rm = fitrm( t, 't1-t2~Group', 'WithinDesign', Time);
+    ranovatbl = ranova(rm);
+    temp_topo_Fval(nE)=ranovatbl.F(2);
+    temp_topo_pval(nE)=ranovatbl.pValue(2);
+
+ 
 figure;
 simpleTopoPlot_ft(temp_topo_Fval(matching_elec)',layout,'on',[],0,1);
 colormap(cmap_ttest);
