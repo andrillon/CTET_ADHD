@@ -241,7 +241,7 @@ Theta_After=squeeze(nanmean(av_PowDataEO(:,2,match_str(TFdata.label,'Fz'),TFdata
 t = table(group_PowDataEO((~isnan(Theta_After)))', Theta_Before(~isnan(Theta_After)),Theta_After(~isnan(Theta_After)),'VariableNames', {'Group', 't1', 't2'});
 Time = [1 2]';
 rm = fitrm( t, 't1-t2~Group', 'WithinDesign', Time);
-fprintf('rmANOVA for Fz: F=%g p=%1.5f\n',ranovatbl.F(2),ranovatbl.pValue(2))
+fprintf('rmANOVA for Fz: F=%1.5f p=%1.5f\n',ranovatbl.F(2),ranovatbl.pValue(2))
 
 temp_topo_Fval=[];
 temp_topo_pval=[];
