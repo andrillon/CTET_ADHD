@@ -433,19 +433,30 @@ Colors2=[247,104,161;
 
 figure;
 subplot(1,3,1);
-simpleCorPlot(table_P2PandBehav(:,end),1-table_P2PandBehav(:,3),{'o',Colors2(2,:),Colors2(2,:),50},'Spearman');
-title('Correlation Miss/SW P2P');
-
+simpleCorPlot(table_P2PandBehav(:,end),100-100*table_P2PandBehav(:,3),{'o',[1 1 1],Colors2(2,:),72},'Spearman');
+simpleCorPlot(table_P2PandBehav(match_str(group_SW,'ADHD'),end),100-100*table_P2PandBehav(match_str(group_SW,'ADHD'),3),{'o',Colors2(2,:),Colors2(2,:),72},'spearman_nofit');
+xlabel('SW P2P')
+ylabel('% Misses')
+set(gca,'FontSize',24);
+title('')
 
 subplot(1,3,2);
-simpleCorPlot(table_P2PandBehav(:,end),1-table_P2PandBehav(:,4),{'o',Colors2(1,:),Colors2(1,:),50},'Spearman');
-title('Correlation FA/SW P2P')
+simpleCorPlot(table_P2PandBehav(:,end),100-100*table_P2PandBehav(:,4),{'o',[1 1 1],Colors2(1,:),72},'Spearman');
+simpleCorPlot(table_P2PandBehav(match_str(group_SW,'ADHD'),end),100-100*table_P2PandBehav(match_str(group_SW,'ADHD'),4),{'o',Colors2(1,:),Colors2(1,:),72},'spearman_nofit');
+xlabel('SW P2P')
+ylabel('% FA')
+set(gca,'FontSize',24);
+title('')
 
 subplot(1,3,3);
-simpleCorPlot(table_P2PandBehav(:,end),table_P2PandBehav(:,5),{'o',Colors2(3,:),Colors2(3,:),50},'Spearman');
-title('Correlation RT/SW P2P')
+simpleCorPlot(table_P2PandBehav(:,end),table_P2PandBehav(:,5),{'o',[1 1 1],Colors2(3,:),72},'Spearman');
+simpleCorPlot(table_P2PandBehav(match_str(group_SW,'ADHD'),end),table_P2PandBehav(match_str(group_SW,'ADHD'),5),{'o',Colors2(3,:),Colors2(3,:),72},'spearman_nofit');
+xlabel('SW P2P')
+ylabel('RT')
+set(gca,'FontSize',24);
+title('')
 
-myFigPos=[182         369        1150         428]
+myFigPos=[182         369        1150         428];
 set(gcf,'Position',myFigPos);
 
 %% Topo correlation P2P amplitude and behav
